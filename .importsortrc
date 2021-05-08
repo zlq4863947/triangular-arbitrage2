@@ -1,0 +1,4 @@
+".ts": {
+  "parser": "typescript",
+  "style": "module-alias",
+}
