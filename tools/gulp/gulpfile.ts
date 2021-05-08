@@ -44,5 +44,11 @@ gulp.task('deploy', (cb: Function) => {
   fs.copyFileSync(`${rootDir}/main.js`, `${deployDir}/main.js`);
   fs.writeFileSync(`${deployDir}/package.json`, getDeployPackageJson());
 
+  const configDir = `${deployDir}/config`;
+  if (!fs.existsSync(configDir)) {
+    fs.mkdirSync(configDir);
+  }
+  fs.copyFileSync(`./config/.env.sample`, `${configDir}/.env.prod`);
+
   cb();
 });
