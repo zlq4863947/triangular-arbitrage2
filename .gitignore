@@ -34,7 +34,6 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # config
-/config/.env.dev
-/config/.env.prod
-/config/.env.test
+/config/default.toml
+/config/test.toml
 /tsconfig.build.tsbuildinfo

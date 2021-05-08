@@ -1,20 +1,16 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 @Injectable()
 export class AppService implements OnModuleInit, OnModuleDestroy {
-  constructor(private configService: ConfigService) {}
-
   getHello(): string {
-    console.log(`aaa: ${this.configService.get('MYSQL_PASSWORD')}`);
     return 'Hello World!';
   }
 
   onModuleDestroy(): any {
-    console.log(`The module has been onModuleDestroy.`);
+    Logger.log(`The module has been onModuleDestroy.`, 'AppService');
   }
 
   onModuleInit(): any {
-    console.log(`The module has been onModuleInit.`);
+    Logger.log(`The module has been onModuleInit.`);
   }
 }

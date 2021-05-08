@@ -19,7 +19,7 @@
     "start": "cross-env NODE_ENV=dev nest start",
     "start:dev": "cross-env NODE_ENV=dev nest start --watch",
     "start:debug": "cross-env NODE_ENV=dev nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "cross-env NODE_ENV=prod node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "jest": "jest --config=jest.json --detectOpenHandles",
     "test": "cross-env NODE_ENV=test yarn jest -- --runInBand",
@@ -29,13 +29,14 @@
   },
   "dependencies": {
     "@nestjs/common": "^7.6.15",
-    "@nestjs/config": "^0.6.3",
     "@nestjs/core": "^7.6.15",
     "@nestjs/platform-express": "^7.6.15",
+    "config": "^3.3.6",
     "cross-env": "^7.0.3",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.6.6"
+    "rxjs": "^6.6.6",
+    "toml": "^3.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.6.0",
