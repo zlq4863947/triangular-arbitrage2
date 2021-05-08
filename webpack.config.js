@@ -15,11 +15,11 @@ module.exports = {
       '@nestjs/microservices/microservices-module': 'commonjs2 @nestjs/microservices/microservices-module',
 
       // I'll skip pg-native in the production deployement, and use the pure JS implementation
-      'pg-native': 'commonjs2 pg-native'
-    }
+      'pg-native': 'commonjs2 pg-native',
+    },
   ],
   optimization: {
     // Minimization doesn't work with @Module annotation
-    minimize: false,
-  }
+    minimize: true,
+  },
 };

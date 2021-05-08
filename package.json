@@ -7,7 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "deploy:app": "yarn prebuild && yarn bundle:app && gulp deploy",
-    "bundle:app": "nest build --webpack  --mode productions",
+    "webpack": "webpack --config webpack.config.js",
+    "bundle:app": "nest build --webpack",
     "bundle:migrations": "nest build --webpack --webpackPath webpack/typeorm-cli.config.js && nest build --webpack --webpackPath webpack/migrations.config.js",
     "bundle": "yarn bundle:app && yarn bundle:migrations",
     "prebuild": "rimraf dist",
