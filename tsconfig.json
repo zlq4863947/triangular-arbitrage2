@@ -11,7 +11,12 @@
     "rootDir": "./src",
     "baseUrl": "./",
     "noEmit": false,
-    "incremental": false
+    "incremental": false,
+    "paths": {
+      "@arbitrage-libs/*": [
+        "src/libs/*"
+      ]
+    }
   },
   "exclude": ["node_modules", "dist", "tools"]
 }

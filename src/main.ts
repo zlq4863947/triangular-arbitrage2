@@ -1,14 +1,18 @@
-import { Logger } from '@nestjs/common';
+import { Logger } from '@arbitrage-libs/logger';
 import { NestFactory } from '@nestjs/core';
+import * as chalk from 'chalk';
 
-import { AppModule } from './app.module';
-import { AppService } from './app.service';
+import { AppModule, AppService } from './app';
 
 async function bootstrap() {
-  const app = await NestFactory.createApplicationContext(AppModule);
-  Logger.log(`start service`, 'bootstrap');
-  const appService = app.get(AppService);
-  appService.getHello();
+  const app = await NestFactory.createApplicationContext(AppModule, {
+    logger: false,
+  });
+  const logger = app.get(Logger);
+  app.useLogger(logger);
+  logger.log(`start service`, 'bootstrap');
+  // const appService = app.get(AppService);
+  // appService.getHello();
   await app.close();
 }
 bootstrap();
