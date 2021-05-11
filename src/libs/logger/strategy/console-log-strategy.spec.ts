@@ -1,5 +1,5 @@
+import { LogLevels } from '../types';
 import { ConsoleLogStrategy } from './console-log-strategy';
-import { LogLevels } from './types';
 
 describe('ConsoleLogStrategy', () => {
   describe('logLevel = debug', () => {

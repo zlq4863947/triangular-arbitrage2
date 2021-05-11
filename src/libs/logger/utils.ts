@@ -26,5 +26,5 @@ export function makeColoredLogArgs(logLevel: LogLevels, tag: string, dateLabel: 
     Error: colorLevel(LogLevels.Error),
   };
 
-  return [loggerColorSettings[logLevel], dateLabel, chalk.hex(tagColor).bold(`[${tag}]`), chalk.hex(dataColor).bold(...data)];
+  return [loggerColorSettings[logLevel], dateLabel, chalk.hex(tagColor).bold(`[${tag}] `), chalk.hex(dataColor).bold(...data)];
 }

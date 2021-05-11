@@ -1,5 +1,5 @@
 import { InjectionToken } from './injection-token';
-import { LogStrategy } from './log-strategy';
+import { LogStrategy } from './strategy/log-strategy';
 import { LogLevels } from './types';
 
 export const LOG_STRATEGY = new InjectionToken<LogStrategy>('LOG_STRATEGY');

@@ -1,4 +1,4 @@
-import { LogLevels } from './types';
+import { LogLevels } from '../types';
 
 export interface LogStrategy {
   log(logLevel: LogLevels, tag: string, ...data: unknown[]): void;
