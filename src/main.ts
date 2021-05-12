@@ -1,8 +1,7 @@
 import { Logger } from '@arbitrage-libs/logger';
 import { NestFactory } from '@nestjs/core';
-import * as chalk from 'chalk';
 
-import { AppModule, AppService } from './app';
+import { AppModule } from './app';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule, {

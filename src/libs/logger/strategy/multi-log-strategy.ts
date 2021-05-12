@@ -35,7 +35,8 @@ export class MultiLogStrategy implements LogStrategy {
         console: { type: 'console', layout: { type: 'messagePassThrough' } },
       },
       categories: {
-        default: { appenders: ['multi', 'console'], level: 'ALL' },
+        default: { appenders: ['multi'], level: 'ALL' },
+        console: { appenders: ['console'], level: 'ALL' },
       },
     });
 
@@ -45,20 +46,24 @@ export class MultiLogStrategy implements LogStrategy {
   }
 
   log(logLevel: LogLevels, tag: string, ...data: unknown[]) {
-    const message: string = getLogContent(this.enableColors, logLevel, tag, ...data).join('');
+    const colorMessage = getLogContent(this.enableColors, logLevel, tag, ...data).join('');
+    const message = getLogContent(false, logLevel, tag, ...data).join('');
     switch (logLevel) {
       case LogLevels.Warn:
       case LogLevels.Debug: {
         this.loggerMap.get(LogCategory.Debug).debug(message);
+        getLogger('console').info(colorMessage);
         return;
       }
       case LogLevels.Log:
       case LogLevels.Info: {
         this.loggerMap.get(LogCategory.App).info(message);
+        getLogger('console').info(colorMessage);
         return;
       }
       case LogLevels.Error: {
         this.loggerMap.get(LogCategory.Error).error(message);
+        getLogger('console').info(colorMessage);
         return;
       }
     }

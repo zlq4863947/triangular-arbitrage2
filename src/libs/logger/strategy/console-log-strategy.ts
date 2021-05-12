@@ -9,7 +9,7 @@ import { getLogContent } from './utils';
 export class ConsoleLogStrategy implements LogStrategy {
   constructor(@Inject(ENABLE_COLORS) private readonly enableColors: boolean) {}
   log(logLevel: LogLevels, tag: string, ...data: unknown[]) {
-    let logArgs = getLogContent(this.enableColors, logLevel, tag, ...data);
+    const logArgs = getLogContent(this.enableColors, logLevel, tag, ...data);
 
     switch (logLevel) {
       case LogLevels.Debug: {
