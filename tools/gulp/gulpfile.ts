@@ -48,7 +48,7 @@ gulp.task('deploy', (cb: Function) => {
   if (!fs.existsSync(configDir)) {
     fs.mkdirSync(configDir);
   }
-  fs.copyFileSync(`./config/.env.sample`, `${configDir}/.env.prod`);
+  fs.copyFileSync(`./config/default.sample.toml`, `${configDir}/default.toml`);
 
   cb();
 });

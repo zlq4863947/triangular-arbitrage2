@@ -13,6 +13,7 @@ module.exports = {
       'aws-sdk': 'commonjs2 aws-sdk',
       '@nestjs/websockets/socket-module': 'commonjs2 @nestjs/websockets/socket-module',
       '@nestjs/microservices/microservices-module': 'commonjs2 @nestjs/microservices/microservices-module',
+      log4js: 'commonjs2 log4js',
 
       // I'll skip pg-native in the production deployement, and use the pure JS implementation
       'pg-native': 'commonjs2 pg-native',

@@ -52,7 +52,7 @@ export class MultiLogStrategy implements LogStrategy {
       case LogLevels.Warn:
       case LogLevels.Debug: {
         this.loggerMap.get(LogCategory.Debug).debug(message);
-        getLogger('console').info(colorMessage);
+        getLogger('console').debug(colorMessage);
         return;
       }
       case LogLevels.Log:
@@ -63,7 +63,7 @@ export class MultiLogStrategy implements LogStrategy {
       }
       case LogLevels.Error: {
         this.loggerMap.get(LogCategory.Error).error(message);
-        getLogger('console').info(colorMessage);
+        getLogger('console').error(colorMessage);
         return;
       }
     }

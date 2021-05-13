@@ -6,6 +6,7 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
   constructor(private logger: Logger) {}
 
   getHello(): string {
+    this.logger.log('AppService', `getHello`);
     return 'Hello World!';
   }
 

@@ -13,17 +13,19 @@ export function isAllowedLogLevel(minLogLevel: LogLevels, target: LogLevels): bo
   return logLevelStrength[target] >= logLevelStrength[minLogLevel];
 }
 
-function colorLevel(logLevel: LogLevels): string {
-  return `${chalk.whiteBright.bgHex(LogLevelColors[logLevel]).bold(`  ${logLevel} `)}${chalk.hex(LogLevelColors[logLevel]).bgBlack('')}`;
+function colorLevel(logLevel: LogLevels, levelSpace: string): string {
+  return `${chalk.whiteBright.bgHex(LogLevelColors[logLevel]).bold(`  ${logLevel}${levelSpace} `)}${chalk
+    .hex(LogLevelColors[logLevel])
+    .bgBlack('')}`;
 }
 
-export function makeColoredLogArgs(logLevel: LogLevels, tag: string, dateLabel: string, ...data: unknown[]): unknown[] {
+export function makeColoredLogArgs(logLevel: LogLevels, levelSpace: string, tag: string, dateLabel: string, ...data: unknown[]): unknown[] {
   const loggerColorSettings: Record<LogLevels, string> = {
-    Debug: colorLevel(LogLevels.Debug),
-    Log: colorLevel(LogLevels.Log),
-    Info: colorLevel(LogLevels.Info),
-    Warn: colorLevel(LogLevels.Warn),
-    Error: colorLevel(LogLevels.Error),
+    Debug: colorLevel(LogLevels.Debug, levelSpace),
+    Log: colorLevel(LogLevels.Log, levelSpace),
+    Info: colorLevel(LogLevels.Info, levelSpace),
+    Warn: colorLevel(LogLevels.Warn, levelSpace),
+    Error: colorLevel(LogLevels.Error, levelSpace),
   };
 
   return [loggerColorSettings[logLevel], dateLabel, chalk.hex(tagColor).bold(`[${tag}] `), chalk.hex(dataColor).bold(...data)];
