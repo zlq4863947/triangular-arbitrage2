@@ -32,6 +32,13 @@
     whitelist = []
     # 黑名单(设置后C点货币,不会出现黑名单列表中的货币)
     blacklist = ['ONT', 'MCO']
-    # apikey
-    apiKey = "zz"
-    secret = "xx"
+    # 运行模式
+    # test : 模拟交易(testnet)
+    # real : 真实交易
+    mode = "test"
+    [broker.binance.real]
+      apiKey = "zcc"
+      secret = "wer"
+    [broker.binance.test]
+      apiKey = "xx"
+      secret = "aaa"
