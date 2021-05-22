@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 
-import { BinanceWebsocketClientService } from './services/binance-websocket-client.service';
+import { BinanceWebsocketClient } from './services/binance-websocket-client.service';
 
 @Module({
-  providers: [BinanceWebsocketClientService],
+  providers: [BinanceWebsocketClient],
 })
 export class BinanceWebsocketClientModule {}

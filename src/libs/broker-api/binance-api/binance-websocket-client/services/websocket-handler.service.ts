@@ -2,10 +2,23 @@ import { Logger } from '@arbitrage-libs/logger';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
+import * as WebSocket from 'ws';
 
+import { WsEndpoints } from '../constants';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const binance = require('binance');
+
+interface StreamData<T> {
+  subject: Subject<T>;
+  websocket: WebSocket;
+}
 @Injectable()
 export class WebsocketHandler implements OnModuleDestroy {
   private onDestroy$ = new Subject<true>();
+
+  private wsWrapper: any;
+  private streamMap = new Map<WsEndpoints, StreamData<any>>();
+  private joinedEndpointSet = new Set<WsEndpoints>();
 
   /**
    * 当前是否已连接websocket。
@@ -31,7 +44,69 @@ export class WebsocketHandler implements OnModuleDestroy {
 
   constructor(private logger: Logger) {}
 
-  initialize() {}
+  initialize(): void {
+    this.wsWrapper = new binance.BinanceWS();
+  }
 
-  onModuleDestroy(): any {}
+  subscribe<T>(endpoint: WsEndpoints): Observable<T> {
+    return this.getSubjectByStream<T>(endpoint).asObservable();
+  }
+
+  unsubscribe(endpoint: WsEndpoints): void {
+    const stream = this.streamMap.get(endpoint);
+    if (!stream) {
+      return;
+    }
+    this.logger.debug('websocket-handler', 'unsubscribe stream', endpoint, stream);
+    stream.subject.complete();
+    stream.websocket.close();
+    this.streamMap.delete(endpoint);
+    this.joinedEndpointSet.delete(endpoint);
+  }
+
+  unsubscribeAll(): void {
+    for (const endpoint of Array.from(this.streamMap.keys())) {
+      this.unsubscribe(endpoint);
+    }
+  }
+
+  onModuleDestroy(): void {
+    this.unsubscribeAll();
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
+  }
+
+  private getSubjectByStream<T>(endpoint: WsEndpoints): Subject<T> {
+    const stream = this.streamMap.get(endpoint);
+    if (stream) {
+      return stream.subject as Subject<T>;
+    }
+
+    const subject = new Subject<T>();
+    this.logger.debug('websocket-handler', 'subject created', endpoint, subject);
+    const websocket = this.joinStream(endpoint, subject);
+    this.streamMap.set(endpoint, { subject, websocket });
+
+    return subject;
+  }
+
+  private joinStream<T>(endpoint: WsEndpoints, subject: Subject<T>): WebSocket {
+    if (!this.joinedEndpointSet.has(endpoint)) {
+      this.joinedEndpointSet.add(endpoint);
+    }
+    this.logger.info('websocket-handler', 'join stream', endpoint);
+    switch (endpoint) {
+      case WsEndpoints.AllTickers: {
+        return this.wsWrapper.onAllTickers((data) => subject.next(data));
+      }
+    }
+  }
+
+  private reJoinStreams(): void {
+    this.logger.info('websocket-handler', 'try to reJoinStreams.', this.joinedEndpointSet);
+    this.joinedEndpointSet.forEach((endpoint) => {
+      const stream = this.streamMap.get(endpoint);
+      stream.websocket = this.joinStream(endpoint, stream.subject);
+    });
+  }
 }
