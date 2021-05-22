@@ -13,7 +13,7 @@ async function bootstrap() {
     appLogger = logger;
     const appService = app.get(AppService);
     appService.getHello();
-    await app.close();
+    //  await app.close();
   } catch (e) {
     printError('bootstrapException', e);
   }

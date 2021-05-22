@@ -5,6 +5,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 import * as WebSocket from 'ws';
 
 import { WsEndpoints } from '../constants';
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const binance = require('binance');
 

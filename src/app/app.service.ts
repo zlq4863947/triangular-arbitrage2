@@ -1,14 +1,17 @@
-import { BinanceApiService } from '@arbitrage-libs/broker-api';
+import { BinanceWebsocketClient } from '@arbitrage-libs/broker-api';
 import { Logger } from '@arbitrage-libs/logger';
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 @Injectable()
 export class AppService implements OnModuleInit, OnModuleDestroy {
-  constructor(private logger: Logger, private apiService: BinanceApiService) {}
+  constructor(private logger: Logger, private binanceWebsocketClient: BinanceWebsocketClient) {}
 
   getHello(): string {
     this.logger.log('AppService', `getHello`);
-    this.apiService.getApi();
+    this.binanceWebsocketClient.initialize();
+    this.binanceWebsocketClient.getAllTickers$().subscribe((data) => {
+      this.logger.log('getAllTickers$:', JSON.stringify(data));
+    });
 
     return 'Hello World!';
   }

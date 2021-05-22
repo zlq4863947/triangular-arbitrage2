@@ -1,4 +1,4 @@
-import { DynamicModule, Module, Type } from '@nestjs/common';
+import { DynamicModule, Global, Module, Type } from '@nestjs/common';
 
 import { Logger } from './logger';
 import { ConsoleLogStrategy, LogStrategy } from './strategy';
@@ -13,6 +13,7 @@ interface LoggerConfig {
   tagsInclude?: string[];
 }
 
+@Global()
 @Module({
   providers: [Logger],
   exports: [Logger],

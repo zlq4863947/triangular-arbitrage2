@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 
-import { Ticker24Hr } from '../..//types';
 import { WsEndpoints } from '../constants';
+import { Ticker24Hr } from '../types';
 import { WebsocketHandler } from './websocket-handler.service';
 
 @Injectable()
