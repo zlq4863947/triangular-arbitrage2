@@ -13,6 +13,10 @@ async function bootstrap() {
     appLogger = logger;
     const appService = app.get(AppService);
     appService.getHello();
+
+    /* setTimeout(async () => {
+      await app.close();
+    }, 3000);*/
     //  await app.close();
   } catch (e) {
     printError('bootstrapException', e);

@@ -2,8 +2,8 @@ import { Config } from '@arbitrage-libs/config';
 import { provideMockServices } from '@arbitrage-libs/testing';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { WebsocketHandler } from '../websocket-handler/websocket-handler.service';
 import { BinanceWebsocketClient } from './binance-websocket-client.service';
-import { WebsocketHandler } from './websocket-handler.service';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const binance = require('binance');
@@ -41,7 +41,7 @@ describe('BinanceWebsocketClientService', () => {
       handleDrift: false,
     });
 
-    service.getExecutionReport$(rest).subscribe((data) => {
+    service.getUserData$(rest).subscribe((data) => {
       expect(data).toBeDefined();
       done();
     });

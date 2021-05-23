@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { BinanceWebsocketClient, WebsocketHandler } from './services';
+import { BinanceApiService, BinanceRestClient, BinanceWebsocketClient, WebsocketHandler } from './services';
 
 @Module({
-  exports: [BinanceWebsocketClient],
-  providers: [WebsocketHandler, BinanceWebsocketClient],
+  exports: [BinanceApiService, BinanceWebsocketClient, BinanceRestClient],
+  providers: [BinanceApiService, WebsocketHandler, BinanceWebsocketClient, BinanceRestClient],
 })
 export class BinanceApiModule {}

@@ -11,7 +11,7 @@ export const WsMarketEndpoints = {
 export type WsMarketEndpoints = typeof WsMarketEndpoints[keyof typeof WsMarketEndpoints];
 
 export const WsUserEndpoints = {
-  ExecutionReport: 'executionReport',
+  UserData: 'userData',
 } as const;
 
 export type WsUserEndpoints = typeof WsUserEndpoints[keyof typeof WsUserEndpoints];

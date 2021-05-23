@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 
-import { WsEndpoints, WsMarketEndpoints } from '../constants';
-import { ExecutionReport, Ticker24Hr } from '../types';
-import { WebsocketHandler } from './websocket-handler.service';
+import { WsEndpoints, WsMarketEndpoints } from '../../constants';
+import { Ticker24Hr, UserData } from '../../types';
+import { WebsocketHandler } from '../websocket-handler/websocket-handler.service';
 
 @Injectable()
 export class BinanceWebsocketClient {
@@ -21,12 +21,12 @@ export class BinanceWebsocketClient {
     return this.websocketHandler.unsubscribe(WsMarketEndpoints.AllTickers);
   }
 
-  getExecutionReport$(rest: any): Observable<ExecutionReport> {
-    return this.websocketHandler.subscribeUserData<ExecutionReport>(WsEndpoints.ExecutionReport, rest);
+  getUserData$(rest: any): Observable<UserData> {
+    return this.websocketHandler.subscribeUserData<UserData>(WsEndpoints.UserData, rest);
   }
 
   disposeExecutionReport(): void {
-    return this.websocketHandler.unsubscribe(WsEndpoints.ExecutionReport);
+    return this.websocketHandler.unsubscribe(WsEndpoints.UserData);
   }
 
   disposeAllSubscriptions(): void {

@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import * as WebSocket from 'ws';
 
-import { WsEndpoints, WsMarketEndpoints, WsUserEndpoints } from '../constants';
+import { WsEndpoints, WsMarketEndpoints, WsUserEndpoints } from '../../constants';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const binance = require('binance');
@@ -54,8 +54,8 @@ export class WebsocketHandler implements OnModuleDestroy {
     return this.getSubjectByStream<T>(endpoint).asObservable();
   }
 
-  subscribeUserData<T>(endpoint: WsUserEndpoints, rest: any): Observable<T> {
-    this.restWrapper = rest;
+  subscribeUserData<T>(endpoint: WsUserEndpoints, listenKeyRest: any): Observable<T> {
+    this.restWrapper = listenKeyRest;
 
     return this.getSubjectByStream<T>(endpoint).asObservable();
   }
@@ -108,7 +108,7 @@ export class WebsocketHandler implements OnModuleDestroy {
       case WsEndpoints.AllTickers: {
         return this.wsWrapper.onAllTickers((data) => subject.next(data));
       }
-      case WsEndpoints.ExecutionReport: {
+      case WsEndpoints.UserData: {
         if (!this.restWrapper) {
           this.logger.error('websocket-handler', 'restWrapper is null', endpoint);
           return;

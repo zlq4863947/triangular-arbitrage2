@@ -1,5 +1,19 @@
+/**
+ * 事件类型
+ */
+export const EventType = {
+  // 24小时Ticker
+  Ticker24hr: '24hrTicker',
+  // 订单更新
+  ExecutionReport: 'executionReport',
+  // 帐户余额发生变化
+  OutboundAccountPosition: 'outboundAccountPosition',
+} as const;
+
+export type EventType = typeof EventType[keyof typeof EventType];
+
 export interface EventData {
-  eventType: string; // "24hrTicker" or "executionReport",   事件类型
+  eventType: EventType; // "24hrTicker" or "executionReport",   事件类型
   eventTime: number; // 123456789,            事件时间
   symbol: string; // "BNBBTC",                交易对
 }
@@ -50,7 +64,7 @@ export type ExecutionType = typeof ExecutionType[keyof typeof ExecutionType];
  * 订单更新
  * https://binance-docs.github.io/apidocs/spot/cn/#payload-2
  */
-export interface ExecutionReport extends EventData {
+export interface UserData extends EventData {
   newClientOrderId: string; // "IoyjBHK8OIGkFJN2DtCX6N",    Client order ID
   side: string; // "SELL",                                  订单方向
   orderType: string; // "LIMIT",                            订单类型
