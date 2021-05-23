@@ -30,19 +30,21 @@ export interface Ticker24Hr extends EventData {
 /**
  * 执行类型
  */
-export enum ExecutionType {
+export const ExecutionType = {
   // 新订单
-  NEW = 'NEW',
+  NEW: 'NEW',
   // 订单被取消
-  CANCELED = 'CANCELED',
+  CANCELED: 'CANCELED',
   // 新订单被拒绝
-  REJECTED = 'REJECTED',
+  REJECTED: 'REJECTED',
   // 订单有新成交
-  TRADE = 'TRADE',
+  TRADE: 'TRADE',
   // 订单失效(根据订单的Time In Force参数)
-  EXPIRED = 'EXPIRED',
-  FILLED = 'FILLED',
-}
+  EXPIRED: 'EXPIRED',
+  FILLED: 'FILLED',
+} as const;
+
+export type ExecutionType = typeof ExecutionType[keyof typeof ExecutionType];
 
 /**
  * 订单更新

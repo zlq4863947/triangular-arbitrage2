@@ -1,20 +1,11 @@
 # 配置文件
 
-###
-### [arbitrage]
-### 三角套利相关配置
-###
-[arbitrage]
-  # 运行模式
-  # test : 模拟交易
-  # real : 真实交易
-  mode = "test"
-  # 初始默认交易所[kucoin/binance/bitbank], 之后可以通过参数变更
-  active = "binance"
-  # 最小买入金额(BTC单位)
-  minAmount = 0.002
-  # 最大同时进行的交易会话数
-  sessionLimit = 1
+# 套利交易所
+active = "binance"
+# 最小买入金额(BTC单位)
+minAmount = 0.002
+# 最大同时进行的交易会话数
+sessionLimit = 1
 
 ###
 ### [broker]
@@ -24,7 +15,7 @@
   # binance
   [broker.binance]
     # 套利手续费（例如: 0.05 x 3 = 0.15%）
-    arbitrageFee = 0.15
+    fee = 0.15
     # 起始货币数组(全市场都可作为起始币时：[]) 'BTC', 'ETH', 'USDT', 'BNB'
     startCoins = ['BTC', 'ETH', 'USDT', 'BNB']
     # 白名单(设置后C点货币,只会出现白名单列表中的货币)
@@ -33,9 +24,9 @@
     # 黑名单(设置后C点货币,不会出现黑名单列表中的货币)
     blacklist = ['ONT', 'MCO']
     # 运行模式
-    # test : 模拟交易(testnet)
+    # test : 模拟交易
     # real : 真实交易
-    mode = "test"
+    mode = "real"
     [broker.binance.real]
       apiKey = "zcc"
       secret = "wer"

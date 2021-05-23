@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import * as WebSocket from 'ws';
 
-import { WsEndpoints } from '../constants';
+import { WsEndpoints, WsMarketEndpoints, WsUserEndpoints } from '../constants';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const binance = require('binance');
@@ -18,6 +18,7 @@ export class WebsocketHandler implements OnModuleDestroy {
   private onDestroy$ = new Subject<true>();
 
   private wsWrapper: any;
+  private restWrapper: any;
   private streamMap = new Map<WsEndpoints, StreamData<any>>();
   private joinedEndpointSet = new Set<WsEndpoints>();
 
@@ -49,7 +50,13 @@ export class WebsocketHandler implements OnModuleDestroy {
     this.wsWrapper = new binance.BinanceWS();
   }
 
-  subscribe<T>(endpoint: WsEndpoints): Observable<T> {
+  subscribe<T>(endpoint: WsMarketEndpoints): Observable<T> {
+    return this.getSubjectByStream<T>(endpoint).asObservable();
+  }
+
+  subscribeUserData<T>(endpoint: WsUserEndpoints, rest: any): Observable<T> {
+    this.restWrapper = rest;
+
     return this.getSubjectByStream<T>(endpoint).asObservable();
   }
 
@@ -58,7 +65,7 @@ export class WebsocketHandler implements OnModuleDestroy {
     if (!stream) {
       return;
     }
-    this.logger.debug('websocket-handler', 'unsubscribe stream', endpoint, stream);
+    this.logger.debug('websocket-handler', 'unsubscribe stream', endpoint);
     stream.subject.complete();
     stream.websocket.close();
     this.streamMap.delete(endpoint);
@@ -66,6 +73,7 @@ export class WebsocketHandler implements OnModuleDestroy {
   }
 
   unsubscribeAll(): void {
+    this.logger.debug('websocket-handler', 'unsubscribe all stream');
     for (const endpoint of Array.from(this.streamMap.keys())) {
       this.unsubscribe(endpoint);
     }
@@ -84,7 +92,7 @@ export class WebsocketHandler implements OnModuleDestroy {
     }
 
     const subject = new Subject<T>();
-    this.logger.debug('websocket-handler', 'subject created', endpoint, subject);
+    this.logger.debug('websocket-handler', 'subject created', endpoint);
     const websocket = this.joinStream(endpoint, subject);
     this.streamMap.set(endpoint, { subject, websocket });
 
@@ -99,6 +107,14 @@ export class WebsocketHandler implements OnModuleDestroy {
     switch (endpoint) {
       case WsEndpoints.AllTickers: {
         return this.wsWrapper.onAllTickers((data) => subject.next(data));
+      }
+      case WsEndpoints.ExecutionReport: {
+        if (!this.restWrapper) {
+          this.logger.error('websocket-handler', 'restWrapper is null', endpoint);
+          return;
+        }
+
+        return this.wsWrapper.onUserData(this.restWrapper, (data) => subject.next(data));
       }
     }
   }

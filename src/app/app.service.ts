@@ -4,13 +4,13 @@ import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
 @Injectable()
 export class AppService implements OnModuleInit, OnModuleDestroy {
-  constructor(private logger: Logger, private binanceWebsocketClient: BinanceWebsocketClient) {}
+  constructor(private logger: Logger, private binanceWsClient: BinanceWebsocketClient) {}
 
   getHello(): string {
     this.logger.log('AppService', `getHello`);
-    this.binanceWebsocketClient.initialize();
-    this.binanceWebsocketClient.getAllTickers$().subscribe((data) => {
-      this.logger.log('getAllTickers$:', JSON.stringify(data));
+    this.binanceWsClient.initialize();
+    this.binanceWsClient.getAllTickers$().subscribe((data) => {
+      this.logger.log('getAllTickers$:', data.length);
     });
 
     return 'Hello World!';

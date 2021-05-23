@@ -4,6 +4,21 @@ export const brokerConfig = {
   websocketCombinedBaseUrl: 'wss://stream.binance.com:9443/stream?streams=',
 };
 
-export enum WsEndpoints {
-  AllTickers = 'allTickers',
-}
+export const WsMarketEndpoints = {
+  AllTickers: 'allTickers',
+} as const;
+
+export type WsMarketEndpoints = typeof WsMarketEndpoints[keyof typeof WsMarketEndpoints];
+
+export const WsUserEndpoints = {
+  ExecutionReport: 'executionReport',
+} as const;
+
+export type WsUserEndpoints = typeof WsUserEndpoints[keyof typeof WsUserEndpoints];
+
+export const WsEndpoints = {
+  ...WsMarketEndpoints,
+  ...WsUserEndpoints,
+} as const;
+
+export type WsEndpoints = WsUserEndpoints | WsMarketEndpoints;
