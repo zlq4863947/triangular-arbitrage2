@@ -17,10 +17,4 @@ describe('BinanceRestClient', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-
-  it('should get pairs', async (done) => {
-    const res = await service.getPairs();
-    console.log(res);
-    // expect(service).toBeDefined();
-  });
 });

@@ -4,6 +4,10 @@ export interface Pairs {
   [pair: string]: Market;
 }
 
-export interface Markets {
+export interface AssetMarkets {
   [asset: string]: Market[];
+}
+
+export interface AssetMarket {
+  [asset: string]: Market;
 }

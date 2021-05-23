@@ -1,5 +1,5 @@
 import { Config } from '@arbitrage-libs/config';
-import { provideMockServices } from '@arbitrage-libs/testing';
+import { MockModule } from '@arbitrage-libs/testing';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { WebsocketHandler } from '../websocket-handler/websocket-handler.service';
@@ -13,7 +13,8 @@ describe('BinanceWebsocketClientService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [...provideMockServices(), WebsocketHandler, BinanceWebsocketClient],
+      imports: [MockModule],
+      providers: [WebsocketHandler, BinanceWebsocketClient],
     }).compile();
 
     service = module.get<BinanceWebsocketClient>(BinanceWebsocketClient);
@@ -26,7 +27,7 @@ describe('BinanceWebsocketClientService', () => {
 
   it('should get getAllTickers$', (done) => {
     service.getAllTickers$().subscribe((data) => {
-      expect(data.length > 0).toBeTruthy();
+      expect(Object.keys(data).length > 0).toBeTruthy();
       done();
     });
   });

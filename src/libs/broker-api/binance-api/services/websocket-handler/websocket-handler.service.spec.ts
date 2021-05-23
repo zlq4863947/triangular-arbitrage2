@@ -1,4 +1,3 @@
-import { provideMockServices } from '@arbitrage-libs/testing';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { WebsocketHandler } from './websocket-handler.service';
@@ -8,7 +7,7 @@ describe('WebsocketHandlerService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [...provideMockServices(), WebsocketHandler],
+      providers: [WebsocketHandler],
     }).compile();
 
     service = module.get<WebsocketHandler>(WebsocketHandler);

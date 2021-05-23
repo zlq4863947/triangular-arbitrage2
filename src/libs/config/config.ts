@@ -13,7 +13,7 @@ export enum SupportBroker {
 
 export interface ConfigBroker {
   fee: number;
-  startAssets: string;
+  startAssets: string[];
   whitelist: string[];
   blacklist: string[];
   mode: 'real' | 'test';

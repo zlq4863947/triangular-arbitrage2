@@ -9,15 +9,10 @@ async function bootstrap() {
     const app = await NestFactory.createApplicationContext(AppModule);
     const logger = app.get(Logger);
     app.useLogger(logger);
-    logger.log(`start service`, 'bootstrap');
     appLogger = logger;
-    const appService = app.get(AppService);
-    appService.getHello();
 
-    /* setTimeout(async () => {
-      await app.close();
-    }, 3000);*/
-    //  await app.close();
+    const appService = app.get(AppService);
+    appService.start();
   } catch (e) {
     printError('bootstrapException', e);
   }

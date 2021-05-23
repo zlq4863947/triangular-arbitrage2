@@ -1,50 +1,26 @@
 import { BinanceApiService } from '@arbitrage-libs/broker-api';
-import { Config } from '@arbitrage-libs/config';
 import { Logger } from '@arbitrage-libs/logger';
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const binance = require('binance');
+import { EngineService } from './modules';
 
 @Injectable()
 export class AppService implements OnModuleInit, OnModuleDestroy {
-  constructor(private logger: Logger, private binanceApi: BinanceApiService) {}
+  constructor(private logger: Logger, private binanceApi: BinanceApiService, private engineService: EngineService) {}
 
-  getHello(): string {
-    this.logger.log('AppService', `getHello`);
-    this.binanceApi.ws.initialize();
-    const rest = new binance.BinanceRest({
-      key: Config.credential.apiKey,
-      secret: Config.credential.secret,
-      timeout: 15000,
-      recvWindow: 10000,
-      disableBeautification: false,
-      handleDrift: false,
-    });
-    /* this.binanceApi.ws.getUserData$(rest).subscribe((data) => {
-      this.logger.log('getExecutionReport$:', JSON.stringify(data));
-    });
-    this.binanceApi.ws.getAllTickers$().subscribe((data) => {
-      this.logger.log('getAllTickers$:', JSON.stringify(data));
-    });
+  start(): void {
+    this.logger.log('AppService', `启动三角套利机器人...`);
 
-    setTimeout(() => {
-      this.binanceApi.ws.disposeAllTickers();
-    }, 3000); */
-
-    this.binanceApi.rest.initialize();
-    this.binanceApi.rest.getPairs().then((res) => {
-      console.log(res);
+    this.engineService.getCandidates$().subscribe((triangles) => {
+      console.log('triangles:', triangles);
     });
-
-    return 'Hello World!';
   }
 
-  onModuleDestroy(): any {
+  onModuleDestroy(): void {
     this.logger.log('AppService', `The module has been onModuleDestroy.`);
   }
 
-  onModuleInit(): any {
+  onModuleInit(): void {
     this.logger.info('AppService', `The module has been onModuleInit.`);
   }
 }

@@ -87,3 +87,7 @@ export interface UserData extends EventData {
   tradeId: number; // 18151                                 成交ID
   maker: boolean; // false                                  maker side
 }
+
+export interface Tickers {
+  [pair: string]: Ticker24Hr;
+}
