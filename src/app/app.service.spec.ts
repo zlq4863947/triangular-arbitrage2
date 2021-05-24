@@ -15,7 +15,7 @@ describe('AppService', () => {
   });
 
   it('should be defined', () => {
-    const res = solarTerm(2021, 1, 5);
+    const res = solarTerm(2021, 5, 9);
     expect(service).toBeDefined();
   });
 });

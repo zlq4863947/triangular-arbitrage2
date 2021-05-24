@@ -5,5 +5,5 @@
     "declaration": false,
     "sourceMap": false
   },
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "tools"]
+  "exclude": ["node_modules", "dist", "**/*spec.ts", "tools"]
 }

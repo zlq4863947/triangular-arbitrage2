@@ -1,4 +1,4 @@
-import { AssetMarket, BinanceApiService, Ticker24Hr, Tickers } from '@arbitrage-libs/broker-api';
+import { AssetMarket, BinanceApiService, Tickers } from '@arbitrage-libs/broker-api';
 import { Config } from '@arbitrage-libs/config';
 import { Logger } from '@arbitrage-libs/logger';
 import { getTriangleRate } from '@arbitrage-libs/util';
@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 
 import { ABCAssetName, Edge, Triangle } from '../../models';
 
-const MAX_CANDIDATES_NUM = 30;
+const MAX_CANDIDATES_NUM = 20;
 
 @Injectable()
 export class EngineService {
