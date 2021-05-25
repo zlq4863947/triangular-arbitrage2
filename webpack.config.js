@@ -1,11 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const webpack = require('webpack');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const { NODE_ENV = 'production' } = process.env;
 
 console.log(`-- Webpack <${NODE_ENV}> build --`);
@@ -14,20 +9,16 @@ module.exports = {
   entry: './src/main.ts',
   mode: NODE_ENV,
   target: 'node',
+  optimization: {
+    minimize: false,
+    removeAvailableModules: false,
+    removeEmptyChunks: false,
+    splitChunks: false,
+  },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      parallel: true,
-      uglifyOptions: {
-        mangle: true,
-      },
-      compress: {
-        warnings: false,
-      },
-      output: {
-        comments: false,
-      },
-    }),
+    /* new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
+    }),*/
     new webpack.IgnorePlugin({
       /**
        * There is a small problem with Nest's idea of lazy require() calls,
@@ -36,7 +27,15 @@ module.exports = {
        * Refer to: https://github.com/nestjs/nest/issues/1706
        */
       checkResource(resource) {
-        const lazyImports = ['@nestjs/microservices', '@nestjs/platform-express', 'cache-manager', 'class-validator', 'class-transformer'];
+        const lazyImports = [
+          '@nestjs/websockets/socket-modules',
+          '@nestjs/microservices/microservices-module',
+          '@nestjs/microservices',
+          '@nestjs/platform-express',
+          'cache-manager',
+          'class-validator',
+          'class-transformer',
+        ];
         if (!lazyImports.includes(resource)) {
           return false;
         }
@@ -63,11 +62,23 @@ module.exports = {
   stats: {
     // This is optional, but it hides noisey warnings
     warningsFilter: [
+      'node_modules/config/parser.js',
       'node_modules/express/lib/view.js',
       'node_modules/@nestjs/common/utils/load-package.util.js',
+      'node_modules/@nestjs/core/helpers/optional-require.js',
       'node_modules/@nestjs/core/helpers/load-adapter.js',
       'node_modules/optional/optional.js',
       (warning) => false,
     ],
   },
+  externals: [
+    {
+      '@nestjs/websockets/socket-module': 'commonjs2 @nestjs/websockets/socket-module',
+      '@nestjs/microservices/microservices-module': 'commonjs2 @nestjs/microservices/microservices-module',
+      binance: 'commonjs2 binance',
+      config: 'commonjs2 config',
+      toml: 'commonjs2 toml',
+      log4js: 'commonjs2 log4js',
+    },
+  ],
 };
