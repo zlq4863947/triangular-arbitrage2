@@ -2,6 +2,10 @@ import * as fs from 'fs';
 import * as gulp from 'gulp';
 import { getDeployPackageJson } from './function';
 
+const terser = require('gulp-terser');
+const alias = require('gulp-ts-alias');
+const ts = require('gulp-typescript');
+
 const spawn = require('child_process').spawn;
 
 // read version property from package.json
@@ -41,7 +45,7 @@ gulp.task('deploy', (cb: Function) => {
   if (!fs.existsSync(deployDir)) {
     fs.mkdirSync(deployDir);
   }
-  fs.copyFileSync(`${rootDir}/main.js`, `${deployDir}/main.js`);
+  fs.copyFileSync(`${rootDir}/bundle.js`, `${deployDir}/bundle.js`);
   fs.writeFileSync(`${deployDir}/package.json`, getDeployPackageJson());
 
   const configDir = `${deployDir}/config`;
@@ -51,4 +55,50 @@ gulp.task('deploy', (cb: Function) => {
   fs.copyFileSync(`./config/default.sample.toml`, `${configDir}/default.toml`);
 
   cb();
+});
+
+const terserOptions = {
+  ecma: 5,
+  parse: {},
+  compress: {},
+  mangle: {
+    keep_fnames: false,
+    keep_classnames: false,
+    properties: false, // Note `mangle.properties` is `false` by default.
+  },
+  module: false,
+  // Deprecated
+  output: null,
+  format: { comments: false, beautify: false },
+  toplevel: false,
+  nameCache: null,
+  ie8: false,
+  keep_classnames: false,
+  keep_fnames: false,
+  safari10: false,
+};
+
+gulp.task('minify', () => {
+  const devProject = ts.createProject('tsconfig.json');
+  const buildProject = ts.createProject('tsconfig.build.json');
+  const devConfig = devProject.config;
+  const buildConfig = buildProject.config;
+
+  const tsconfig = {
+    compilerOptions: {
+      ...devConfig.compilerOptions,
+      ...buildConfig.compilerOptions,
+    },
+    exclude: buildConfig.exclude,
+    compileOnSave: buildConfig.compileOnSave,
+  };
+
+  const minify = buildProject
+    .src()
+    .pipe(alias({ configuration: tsconfig }))
+    .pipe(buildProject())
+    .js.pipe(terser(terserOptions))
+    .pipe(gulp.dest('dist'));
+
+  return minify;
 });

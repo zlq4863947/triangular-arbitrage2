@@ -1,40 +1,25 @@
 const path = require('path');
 const webpack = require('webpack');
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
+
 const { NODE_ENV = 'production' } = process.env;
 
-console.log(`-- Webpack <${NODE_ENV}> build --`);
+console.log(`-- Webpack <${NODE_ENV}> build for Gulp scripts --`);
 
 module.exports = {
-  entry: './src/main.ts',
-  mode: NODE_ENV,
   target: 'node',
+  mode: NODE_ENV,
+  entry: './dist/main.js',
   optimization: {
     minimize: false,
-    minimizer: [
-      new TerserPlugin({
-        terserOptions: {
-          ecma: undefined,
-          parse: {},
-          compress: {},
-          mangle: true, // Note `mangle.properties` is `false` by default.
-          module: false,
-          // Deprecated
-          output: null,
-          format: { comments: true, beautify: true },
-          toplevel: false,
-          nameCache: null,
-          ie8: false,
-          keep_classnames: undefined,
-          keep_fnames: false,
-          safari10: false,
-        },
-      }),
-    ],
     removeAvailableModules: false,
     removeEmptyChunks: false,
     splitChunks: false,
+  },
+  output: {
+    // Remember that this file is in a subdirectory, so the output should be in the dist/
+    // directory of the project root
+    path: path.resolve(__dirname, '../dist'),
+    filename: 'bundle.js',
   },
   plugins: [
     new webpack.IgnorePlugin({
@@ -66,26 +51,13 @@ module.exports = {
       },
     }),
   ],
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js',
-  },
-  resolve: {
-    extensions: ['.ts', '.js'],
-    plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.build.json' })],
-  },
-  module: {
-    rules: [{ test: /\.ts$/, loader: 'ts-loader' }],
-  },
   stats: {
     // This is optional, but it hides noisey warnings
     warningsFilter: [
-      'node_modules/config/parser.js',
-      'node_modules/express/lib/view.js',
       'node_modules/@nestjs/common/utils/load-package.util.js',
-      'node_modules/@nestjs/core/helpers/optional-require.js',
       'node_modules/@nestjs/core/helpers/load-adapter.js',
-      'node_modules/optional/optional.js',
+      'node_modules/@nestjs/core/helpers/optional-require.js',
+      'node_modules/express/lib/view.js',
       (warning) => false,
     ],
   },

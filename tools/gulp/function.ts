@@ -7,7 +7,7 @@ export function getDeployPackageJson(): string {
     description: pkg.description,
     author: pkg.author,
     scripts: {
-      start: 'node main.js',
+      start: 'node bundle.js',
     },
     dependencies: pkg.dependencies,
   };
