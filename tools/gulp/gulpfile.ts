@@ -12,7 +12,9 @@ const zip = require('gulp-zip');
 const spawn = require('child_process').spawn;
 
 // read version property from package.json
-const version = require('../../package.json').version;
+const packageInfo = require('../../package.json');
+const version = packageInfo.version;
+const appName = packageInfo.name;
 
 /* create version file to import */
 gulp.task('version', (cb: Function) => {
@@ -43,7 +45,7 @@ gulp.task('hash', (cb: Function) => {
 
 gulp.task('deploy', (cb: Function) => {
   const rootDir = './dist';
-  const deployDir = `${rootDir}/${require('../../package.json').name}`;
+  const deployDir = `${rootDir}/${appName}`;
 
   if (!fs.existsSync(deployDir)) {
     fs.mkdirSync(deployDir);
@@ -108,15 +110,15 @@ gulp.task('minify', () => {
 
 gulp.task('gzip', () => {
   return gulp
-    .src('./dist/triangular-arbitrage2/**')
-    .pipe(tar(`triangular-arbitrage2-v${version}.tar`))
+    .src(`./dist/${appName}/**`)
+    .pipe(tar(`${appName}-v${version}.tar`))
     .pipe(gzip())
     .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('zip', () => {
   return gulp
-    .src('./dist/triangular-arbitrage2/**')
-    .pipe(zip(`triangular-arbitrage2-v${version}.zip`))
+    .src(`./dist/${appName}/**`)
+    .pipe(zip(`${appName}-v${version}.zip`))
     .pipe(gulp.dest('./dist'));
 });
