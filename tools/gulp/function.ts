@@ -1,6 +1,10 @@
+const requiredPackages = ['log4js', 'config', 'toml'];
 export function getDeployPackageJson(): string {
   const pkg = require('../../package.json');
-
+  const dependencies = {} as any;
+  Object.keys(pkg.dependencies)
+    .filter((key) => requiredPackages.includes(key))
+    .forEach((key) => (dependencies[key] = pkg.dependencies[key]));
   const json = {
     name: pkg.name,
     version: pkg.version,
@@ -9,7 +13,7 @@ export function getDeployPackageJson(): string {
     scripts: {
       start: 'node bundle.js',
     },
-    dependencies: pkg.dependencies,
+    dependencies,
   };
 
   return JSON.stringify(json, null, 2);

@@ -65,10 +65,10 @@ module.exports = {
     {
       '@nestjs/websockets/socket-module': 'commonjs2 @nestjs/websockets/socket-module',
       '@nestjs/microservices/microservices-module': 'commonjs2 @nestjs/microservices/microservices-module',
-      binance: 'commonjs2 binance',
+      /* binance: 'commonjs2 binance',*/
+      log4js: 'commonjs2 log4js',
       config: 'commonjs2 config',
       toml: 'commonjs2 toml',
-      log4js: 'commonjs2 log4js',
     },
   ],
 };
