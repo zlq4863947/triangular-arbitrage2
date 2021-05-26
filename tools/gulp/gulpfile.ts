@@ -5,6 +5,9 @@ import { getDeployPackageJson } from './function';
 const terser = require('gulp-terser');
 const alias = require('gulp-ts-alias');
 const ts = require('gulp-typescript');
+const gzip = require('gulp-gzip');
+const tar = require('gulp-tar');
+const zip = require('gulp-zip');
 
 const spawn = require('child_process').spawn;
 
@@ -101,4 +104,19 @@ gulp.task('minify', () => {
     .pipe(gulp.dest('dist'));
 
   return minify;
+});
+
+gulp.task('gzip', () => {
+  return gulp
+    .src('./dist/triangular-arbitrage2/**')
+    .pipe(tar(`triangular-arbitrage2-v${version}.tar`))
+    .pipe(gzip())
+    .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('zip', () => {
+  return gulp
+    .src('./dist/triangular-arbitrage2/**')
+    .pipe(zip(`triangular-arbitrage2-v${version}.zip`))
+    .pipe(gulp.dest('./dist'));
 });
