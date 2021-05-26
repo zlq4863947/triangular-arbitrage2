@@ -58,6 +58,8 @@ module.exports = {
       'node_modules/@nestjs/core/helpers/load-adapter.js',
       'node_modules/@nestjs/core/helpers/optional-require.js',
       'node_modules/express/lib/view.js',
+      'node_modules/binance/node_modules/ws/lib/BufferUtil.js',
+      'node_modules/binance/node_modules/ws/lib/Validation.js',
       (warning) => false,
     ],
   },
