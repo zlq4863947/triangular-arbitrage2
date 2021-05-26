@@ -1,17 +1,16 @@
-import { Logger } from '@arbitrage-libs/logger';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { AppService } from './app.service';
+import { OnDestroyService } from './on-destroy.service';
 
-describe('AppService', () => {
-  let service: AppService;
+describe('OnDestroyService', () => {
+  let service: OnDestroyService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [Logger, AppService],
+      providers: [OnDestroyService],
     }).compile();
 
-    service = module.get<AppService>(AppService);
+    service = module.get<OnDestroyService>(OnDestroyService);
   });
 
   it('should be defined', () => {

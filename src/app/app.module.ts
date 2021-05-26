@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 
 import { AppService } from './app.service';
 import { EngineModule } from './modules';
+import { SharedModule } from './shared';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { EngineModule } from './modules';
       minLogLevel: LogLevels.Debug,
       strategy: MultiLogStrategy,
     }),
+    SharedModule,
   ],
   providers: [AppService],
 })

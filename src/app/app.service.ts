@@ -1,17 +1,18 @@
 import { BinanceApiService } from '@arbitrage-libs/broker-api';
 import { Logger } from '@arbitrage-libs/logger';
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import * as chalk from 'chalk';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 
 import { EngineService } from './modules';
+import { OnDestroyService } from './shared';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 import moment = require('moment');
 const AsciiTable = require('ascii-table');
 
 @Injectable()
-export class AppService implements OnModuleInit, OnModuleDestroy {
-  constructor(private logger: Logger, private binanceApi: BinanceApiService, private engineService: EngineService) {}
+export class AppService extends OnDestroyService implements OnModuleInit {
+  constructor(private logger: Logger, private binanceApi: BinanceApiService, private engineService: EngineService) {
+    super();
+  }
 
   start(): void {
     this.logger.log('AppService', `启动三角套利机器人...`);
@@ -25,10 +26,6 @@ export class AppService implements OnModuleInit, OnModuleDestroy {
       console.log(table.toString());
       table.clear();
     });
-  }
-
-  onModuleDestroy(): void {
-    this.logger.log('AppService', `The module has been onModuleDestroy.`);
   }
 
   onModuleInit(): void {
