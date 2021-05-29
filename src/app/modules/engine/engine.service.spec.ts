@@ -1,5 +1,5 @@
 import { BinanceApiModule, BinanceApiService } from '@arbitrage-libs/broker-api';
-import { MockModule, provideMockServices } from '@arbitrage-libs/testing';
+import { MockModule } from '@arbitrage-libs/testing';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { EngineService } from './engine.service';

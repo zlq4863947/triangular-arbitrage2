@@ -2,25 +2,31 @@ import { AssetMarket, BinanceApiService, Tickers } from '@arbitrage-libs/broker-
 import { Config } from '@arbitrage-libs/config';
 import { Logger } from '@arbitrage-libs/logger';
 import { getTriangleRate } from '@arbitrage-libs/util';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 
 import { ABCAssetName, Edge, Triangle } from '../../models';
 
 const MAX_CANDIDATES_NUM = 20;
 
 @Injectable()
-export class EngineService {
+export class EngineService implements OnModuleInit {
   private rest = this.binanceApi.rest;
   private websocket = this.binanceApi.ws;
 
+  tickers: Tickers;
+
   constructor(private logger: Logger, private binanceApi: BinanceApiService) {}
+
+  onModuleInit(): void {
+    this.websocket.getAllTickers$().subscribe((tickers) => (this.tickers = tickers));
+  }
 
   getCandidates$(): Observable<Triangle[]> {
     return this.websocket.getAllTickers$().pipe(
       map((tickers) => {
-        this.logger.info('EngineService', '获取全市场候选者...');
+        this.logger.info('EngineService', '查找套利机会...');
         let candidates: Triangle[] = [];
         const marketAssetNames = Object.keys(this.rest.assetMarkets);
 
@@ -33,8 +39,9 @@ export class EngineService {
           startAssetNames = startAssetNames.filter((asset) => marketAssetNames.includes(asset));
         }
 
-        if (startAssetNames.length) {
-          this.logger.error('EngineService', '起始交易数组为空！');
+        if (startAssetNames.length === 0) {
+          this.logger.warn('EngineService', '起始交易数组为空！');
+          return [];
         }
 
         for (const [index, assetName] of marketAssetNames.entries()) {
@@ -55,7 +62,7 @@ export class EngineService {
 
         if (candidates.length) {
           candidates.sort((a, b) => {
-            return b.rate - a.rate;
+            return +b.rate - +a.rate;
           });
         }
 
@@ -66,6 +73,7 @@ export class EngineService {
 
         return candidates;
       }),
+      filter((list) => list && list.length > 0),
     );
   }
 

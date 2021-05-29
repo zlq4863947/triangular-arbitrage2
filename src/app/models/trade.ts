@@ -21,7 +21,7 @@ export interface Triangle {
   id: string;
   edges: Edge[];
   // 利率
-  rate: number;
+  rate: string;
   // 时间戳
   time: number;
   logs: TriangleRateLogs;
@@ -34,7 +34,7 @@ export interface ABCAssetName {
 }
 
 export interface TriangleRate {
-  rate: number;
+  rate: string;
   logs: TriangleRateLogs;
 }
 

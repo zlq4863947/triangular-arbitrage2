@@ -29,7 +29,7 @@ export function getTriangleRate(a: Edge, b: Edge, c: Edge): TriangleRate {
   }
 
   return {
-    rate: +step3Rate.minus(1).times(100).toFixed(8),
+    rate: step3Rate.minus(1).times(100).toFixed(8),
     logs: logInfos,
   };
 }

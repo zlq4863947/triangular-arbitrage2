@@ -3,12 +3,13 @@ import { LogLevels, LoggerModule, MultiLogStrategy } from '@arbitrage-libs/logge
 import { Module } from '@nestjs/common';
 
 import { AppService } from './app.service';
-import { EngineModule } from './modules';
+import { EngineModule, TradeModule } from './modules';
 import { SharedModule } from './shared';
 
 @Module({
   imports: [
     EngineModule,
+    TradeModule,
     BrokerApiModule,
     LoggerModule.forRoot({
       enableColors: true,
