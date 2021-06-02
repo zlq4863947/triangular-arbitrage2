@@ -1,7 +1,7 @@
 import { BinanceApiService, Ticker24Hr, Tickers } from '@arbitrage-libs/broker-api';
 import { Config } from '@arbitrage-libs/config';
 import { Logger } from '@arbitrage-libs/logger';
-import { divide, floorByDigit, gte, multiple } from '@arbitrage-libs/util';
+import { divide, floor, getBigNumber, gte, multiple } from '@arbitrage-libs/util';
 import { Injectable } from '@nestjs/common';
 import { Balance } from 'ccxt';
 
@@ -43,16 +43,27 @@ export class TradeService {
    */
   private async testOrder(triangle: Triangle): Promise<void> {
     const balance = await this.rest.getBalance();
-    const freeAssetList = [];
+    const freeAssetList: AssetBalance[] = [];
     for (const assetName of Object.keys(balance)) {
       if (balance[assetName].free > 0) {
         freeAssetList.push({ asset: assetName, ...balance[assetName] });
       }
     }
     if (freeAssetList.length === 0) {
-      this.logger.warn('TradeService', `未查找到持有资产!!`);
+      this.logger.warn('TradeService-testOrder', `未查找到持有资产!!`);
       return;
     }
+
+    const [a, b, c] = triangle.edges;
+
+    // 使用货币
+    const useAssetA = a.side === 'buy' ? a.fromAsset : a.toAsset;
+    const balanceA = balance[useAssetA];
+    if (!balanceA || getBigNumber(balanceA.free).isZero()) {
+      this.logger.warn('TradeService-testOrder', `未查找到持有A边(${a.pair})的报价货币(${useAssetA})资产!!`);
+      return;
+    }
+    debugger;
   }
 }
 
@@ -66,7 +77,7 @@ function checkMinAmount(cEdge: Edge, ticker?: Ticker24Hr): boolean {
     const btcRatePrice = +ticker.currentClose;
     // 判断标的货币是否为报价货币，报价货币时 除法
     const toBtcFn = ticker.symbol === `BTC${cEdge.toAsset}` ? divide : multiple;
-    btcAmount = floorByDigit(toBtcFn(toAssetAmount, btcRatePrice), 8);
+    btcAmount = floor(toBtcFn(toAssetAmount, btcRatePrice), 8);
   }
 
   return gte(btcAmount, Config.root.minAmount);

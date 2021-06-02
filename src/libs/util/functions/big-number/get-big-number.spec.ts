@@ -1,50 +1,97 @@
-import { NumericString } from '@broker-trade-application/models';
+import { BigNumber } from 'bignumber.js';
 
 import { getBigNumber, getBigNumberStrictly } from './get-big-number';
 
-describe('BigNumber internal util functions', () => {
+describe('BigNumber Util Functions', () => {
   describe('getBigNumber', () => {
-    it('should return fallback value.', () => {
-      expect(getBigNumber(null!).toString()).toEqual('0' as NumericString);
-      expect(getBigNumber(undefined!).toString()).toEqual('0' as NumericString);
-      expect(getBigNumber('' as NumericString).toString()).toEqual('0' as NumericString);
-      expect(getBigNumber(Infinity).toString()).toEqual('Infinity' as NumericString);
+    it('should return instance for acceptable values', () => {
+      expect(getBigNumber(0).toNumber()).toBe(0);
+      expect(getBigNumber(-0).toNumber()).toBe(-0);
+      expect(getBigNumber(1).toNumber()).toBe(1);
+      expect(getBigNumber(-1).toNumber()).toBe(-1);
+      expect(getBigNumber(10000000000000000000000).toNumber()).toBe(10000000000000000000000);
+      expect(getBigNumber(-10000000000000000000000).toNumber()).toBe(-10000000000000000000000);
+      expect(getBigNumber(0.000000000000000000001).toNumber()).toBe(0.000000000000000000001);
+      expect(getBigNumber(-0.000000000000000000001).toNumber()).toBe(-0.000000000000000000001);
+      expect(getBigNumber(Infinity).toNumber()).toBe(Infinity);
+      expect(getBigNumber(-Infinity).toNumber()).toBe(-Infinity);
+
+      expect(getBigNumber('0').toString()).toBe('0');
+      expect(getBigNumber('-0').toString()).toBe('0');
+      expect(getBigNumber('1').toString()).toBe('1');
+      expect(getBigNumber('-1').toString()).toBe('-1');
+      expect(getBigNumber('10000000000000000000000').toString()).toBe('1e+22');
+      expect(getBigNumber('-10000000000000000000000').toString()).toBe('-1e+22');
+      expect(getBigNumber('0.000000000000000000001').toString()).toBe('1e-21');
+      expect(getBigNumber('-0.000000000000000000001').toString()).toBe('-1e-21');
+      expect(getBigNumber('Infinity').toString()).toBe('Infinity');
+      expect(getBigNumber('-Infinity').toString()).toBe('-Infinity');
+
+      expect(getBigNumber(new BigNumber('0')).toString()).toBe('0');
+      expect(getBigNumber(new BigNumber(getBigNumber('-0'))).toString()).toBe('0');
+      expect(getBigNumber(new BigNumber(getBigNumber('1'))).toString()).toBe('1');
+      expect(getBigNumber(new BigNumber(getBigNumber('-1'))).toString()).toBe('-1');
+      expect(getBigNumber(new BigNumber(getBigNumber('10000000000000000000000'))).toString()).toBe('1e+22');
+      expect(getBigNumber(new BigNumber(getBigNumber('-10000000000000000000000'))).toString()).toBe('-1e+22');
+      expect(getBigNumber(new BigNumber(getBigNumber('0.000000000000000000001'))).toString()).toBe('1e-21');
+      expect(getBigNumber(new BigNumber(getBigNumber('-0.000000000000000000001'))).toString()).toBe('-1e-21');
+      expect(getBigNumber(new BigNumber(getBigNumber('Infinity'))).toString()).toBe('Infinity');
+      expect(getBigNumber(new BigNumber(getBigNumber('-Infinity'))).toString()).toBe('-Infinity');
     });
 
-    it('should return big number value.', () => {
-      expect(getBigNumber(0).toString()).toEqual('0' as NumericString);
-      expect(getBigNumber(0).toFixed(3)).toEqual('0.000' as NumericString);
-      expect(getBigNumber('0' as NumericString).toString()).toEqual('0' as NumericString);
-      expect(getBigNumber('0' as NumericString).toFixed(3)).toEqual('0.000' as NumericString);
-      expect(getBigNumber(54.345).toString()).toEqual('54.345' as NumericString);
-      expect(getBigNumber(54.345).toFixed(3)).toEqual('54.345' as NumericString);
-      expect(getBigNumber('54.345' as NumericString).toString()).toEqual('54.345' as NumericString);
-      expect(getBigNumber('54.345' as NumericString).toFixed(2)).toEqual('54.35' as NumericString);
-      expect(getBigNumber(12.234567849423).toFixed(3)).toEqual('12.235' as NumericString);
-      expect(getBigNumber(12.234567849423).toFixed(12)).toEqual('12.234567849423' as NumericString);
-      expect(getBigNumber(12.2345678494233459).toString()).toBeTruthy();
+    it('should return instance for unacceptable values.', () => {
+      expect(getBigNumber('').toNumber()).toEqual(NaN);
+      expect(getBigNumber('string').toNumber()).toEqual(NaN);
+      expect(getBigNumber(null as any).toNumber()).toEqual(NaN);
+      expect(getBigNumber(undefined as any).toNumber()).toEqual(NaN);
+      expect(getBigNumber([] as any).toNumber()).toEqual(NaN);
+      expect(getBigNumber({} as any).toNumber()).toEqual(NaN);
     });
   });
 
   describe('getBigNumberSafely', () => {
-    it('should return fallback value.', () => {
-      expect(() => getBigNumberStrictly(null! as NumericString).toString()).toThrow();
-      expect(() => getBigNumberStrictly(undefined! as NumericString).toString()).toThrow();
-      expect(() => getBigNumberStrictly('' as NumericString).toString()).toThrow();
+    it('should not throw error when acceptable value', () => {
+      expect(() => getBigNumberStrictly(0)).not.toThrow();
+      expect(() => getBigNumberStrictly(-0)).not.toThrow();
+      expect(() => getBigNumberStrictly(1)).not.toThrow();
+      expect(() => getBigNumberStrictly(-1)).not.toThrow();
+      expect(() => getBigNumberStrictly(10000000000000000000000)).not.toThrow();
+      expect(() => getBigNumberStrictly(-10000000000000000000000)).not.toThrow();
+      expect(() => getBigNumberStrictly(0.000000000000000000001)).not.toThrow();
+      expect(() => getBigNumberStrictly(-0.000000000000000000001)).not.toThrow();
+      expect(() => getBigNumberStrictly(Infinity)).not.toThrow();
+      expect(() => getBigNumberStrictly(-Infinity)).not.toThrow();
+
+      expect(() => getBigNumberStrictly('0')).not.toThrow();
+      expect(() => getBigNumberStrictly('-0')).not.toThrow();
+      expect(() => getBigNumberStrictly('1')).not.toThrow();
+      expect(() => getBigNumberStrictly('-1')).not.toThrow();
+      expect(() => getBigNumberStrictly('10000000000000000000000')).not.toThrow();
+      expect(() => getBigNumberStrictly('-10000000000000000000000')).not.toThrow();
+      expect(() => getBigNumberStrictly('0.000000000000000000001')).not.toThrow();
+      expect(() => getBigNumberStrictly('-0.000000000000000000001')).not.toThrow();
+      expect(() => getBigNumberStrictly('Infinity')).not.toThrow();
+      expect(() => getBigNumberStrictly('-Infinity')).not.toThrow();
+
+      expect(() => getBigNumberStrictly(new BigNumber(getBigNumberStrictly('0')))).not.toThrow();
+      expect(() => getBigNumberStrictly(new BigNumber(getBigNumberStrictly('-0')))).not.toThrow();
+      expect(() => getBigNumberStrictly(new BigNumber(getBigNumberStrictly('1')))).not.toThrow();
+      expect(() => getBigNumberStrictly(new BigNumber(getBigNumberStrictly('-1')))).not.toThrow();
+      expect(() => getBigNumberStrictly(new BigNumber(getBigNumberStrictly('10000000000000000000000')))).not.toThrow();
+      expect(() => getBigNumberStrictly(new BigNumber(getBigNumberStrictly('-10000000000000000000000')))).not.toThrow();
+      expect(() => getBigNumberStrictly(new BigNumber(getBigNumberStrictly('0.000000000000000000001')))).not.toThrow();
+      expect(() => getBigNumberStrictly(new BigNumber(getBigNumberStrictly('-0.000000000000000000001')))).not.toThrow();
+      expect(() => getBigNumberStrictly(new BigNumber(getBigNumberStrictly('Infinity')))).not.toThrow();
+      expect(() => getBigNumberStrictly(new BigNumber(getBigNumberStrictly('-Infinity')))).not.toThrow();
     });
 
-    it('should return big number value.', () => {
-      expect(getBigNumberStrictly(0).toString()).toEqual('0' as NumericString);
-      expect(getBigNumberStrictly(0).toFixed(3)).toEqual('0.000' as NumericString);
-      expect(getBigNumberStrictly('0' as NumericString).toString()).toEqual('0' as NumericString);
-      expect(getBigNumberStrictly('0' as NumericString).toFixed(3)).toEqual('0.000' as NumericString);
-      expect(getBigNumberStrictly(54.345).toString()).toEqual('54.345' as NumericString);
-      expect(getBigNumberStrictly(54.345).toFixed(3)).toEqual('54.345' as NumericString);
-      expect(getBigNumberStrictly('54.345' as NumericString).toString()).toEqual('54.345' as NumericString);
-      expect(getBigNumberStrictly('54.345' as NumericString).toFixed(2)).toEqual('54.35' as NumericString);
-      expect(getBigNumberStrictly(12.234567849423).toFixed(3)).toEqual('12.235' as NumericString);
-      expect(getBigNumberStrictly(12.234567849423).toFixed(12)).toEqual('12.234567849423' as NumericString);
-      expect(() => getBigNumberStrictly(12.2345678494233459).toString()).toThrow();
+    it('should throw error when unacceptable value', () => {
+      expect(() => getBigNumberStrictly('')).toThrow();
+      expect(() => getBigNumberStrictly('string')).toThrow();
+      expect(() => getBigNumberStrictly(null as any)).toThrow();
+      expect(() => getBigNumberStrictly(undefined as any)).toThrow();
+      expect(() => getBigNumberStrictly([] as any)).toThrow();
+      expect(() => getBigNumberStrictly({} as any)).toThrow();
     });
   });
 });
