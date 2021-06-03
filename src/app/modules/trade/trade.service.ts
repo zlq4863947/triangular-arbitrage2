@@ -1,7 +1,7 @@
 import { BinanceApiService, Ticker24Hr, Tickers } from '@arbitrage-libs/broker-api';
 import { Config } from '@arbitrage-libs/config';
 import { Logger } from '@arbitrage-libs/logger';
-import { divide, floor, getBigNumber, gte, multiple } from '@arbitrage-libs/util';
+import { divide, floor, getBigNumber, gt, gte, multiple } from '@arbitrage-libs/util';
 import { Injectable } from '@nestjs/common';
 import { Balance } from 'ccxt';
 
@@ -27,12 +27,29 @@ export class TradeService {
         asset = tickers[`BTC${cEdge.toAsset}`];
       }
     }
-    const checkRes = checkMinAmount(cEdge, asset);
-    if (!checkRes) {
+    if (!checkMinAmount(cEdge, asset) || !this.checkTradeCost(bestCandidate.rate)) {
       return;
     }
+
     this.logger.log('TradeService', `采用第一名候补者:${bestCandidate.id},开始套利...`);
     await this.testOrder(bestCandidate);
+  }
+
+  /**
+   * 检查交易成本
+   *
+   * @param crossRate 预期交叉汇率
+   * @private
+   */
+  private checkTradeCost(crossRate: string): boolean {
+    const fee = Config.activeBroker.fee;
+    let result = true;
+    if (!gt(crossRate, fee)) {
+      result = false;
+      this.logger.log('TradeService-checkTradeCost', `预期交叉汇率(${crossRate}) < 交易成本(${fee}), 退出套利...`);
+    }
+
+    return result;
   }
 
   /**
@@ -54,6 +71,7 @@ export class TradeService {
       return;
     }
 
+    this.logger.info('TradeService-testOrder', triangle.rate);
     const [a, b, c] = triangle.edges;
 
     // 使用货币
