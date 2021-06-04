@@ -1,7 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 
-/* mock services */
 import { provideMockServices } from './mock.service';
+
+/* mock services */
 
 @Global()
 @Module({

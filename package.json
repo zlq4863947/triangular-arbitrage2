@@ -22,7 +22,7 @@
     "build": "nest build",
     "format": "yarn format:ts:import && yarn format:ts",
     "format:ts": "prettier --config .prettierrc --write \"{src,test,tools}/**/*.ts\"",
-    "format:ts:import": "import-sort --write 'src/**/*.ts'",
+    "format:ts:import": "import-sort --write \"src/**/*.ts\"",
     "start": "cross-env NODE_ENV=dev nest start",
     "start:dev": "cross-env NODE_ENV=dev nest start --watch",
     "start:debug": "cross-env NODE_ENV=dev nest start --debug --watch",
