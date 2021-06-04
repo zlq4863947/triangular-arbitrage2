@@ -31,9 +31,9 @@ describe('getTriangleRate util functions', () => {
     expect(res).toEqual({
       rate: '-0.06664037',
       logs: {
-        aRate: 'a rate = 1 / 0.072811 = 13.73418851',
-        bRate: 'b rate = 13.73418851 / 0.002324 = 5909.71967102',
-        cRate: 'c rate = (5909.71967102 x 0.0001691 -1) x 100 = -0.06664037',
+        aRate: 'a rate = 1 / 0.072811 = 13.73418851 ETH',
+        bRate: 'b rate = 13.73418851 / 0.002324 = 5909.71967102 EOS',
+        cRate: 'c rate = (5909.71967102 x 0.0001691 -1) x 100 = -0.06664037%',
       },
     });
   });

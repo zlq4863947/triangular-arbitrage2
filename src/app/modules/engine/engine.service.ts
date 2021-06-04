@@ -26,7 +26,7 @@ export class EngineService implements OnModuleInit {
   getCandidates$(): Observable<Triangle[]> {
     return this.websocket.getAllTickers$().pipe(
       map((tickers) => {
-        this.logger.info('EngineService', '查找套利机会...');
+        // this.logger.info('EngineService', '查找套利机会...');
         let candidates: Triangle[] = [];
         const marketAssetNames = Object.keys(this.rest.assetMarkets);
 

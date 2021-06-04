@@ -19,6 +19,7 @@ export class AppService extends OnDestroyService implements OnModuleInit {
     this.logger.log('AppService', `启动三角套利机器人...`);
 
     this.engineService.getCandidates$().subscribe((triangles) => this.tradeService.start(triangles, this.engineService.tickers));
+    // this.engineService.getCandidates$().subscribe(this.printTable);
   }
 
   printTable(triangles: Triangle[]): void {

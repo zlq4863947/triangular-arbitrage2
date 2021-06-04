@@ -46,7 +46,7 @@ export class TradeService {
     let result = true;
     if (!gt(crossRate, fee)) {
       result = false;
-      this.logger.log('TradeService-checkTradeCost', `预期交叉汇率(${crossRate}) < 交易成本(${fee}), 退出套利...`);
+      // this.logger.log('TradeService-checkTradeCost', `预期交叉汇率(${crossRate}) < 交易成本(${fee}), 退出套利...`);
     }
 
     return result;
