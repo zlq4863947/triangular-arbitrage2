@@ -1,16 +1,21 @@
+import { BinanceApiModule } from '@arbitrage-libs/broker-api';
+import { MockModule } from '@arbitrage-libs/testing';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { TradeService } from './trade.service';
+import { Triangle } from '../../models';
+import { TradeService, checkMinAmount } from './trade.service';
 
 describe('TradeService', () => {
   let service: TradeService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [MockModule, BinanceApiModule],
       providers: [TradeService],
     }).compile();
 
     service = module.get<TradeService>(TradeService);
+    await (service as any).binanceApi.onModuleInit();
   });
 
   it('should be defined', () => {
@@ -18,7 +23,7 @@ describe('TradeService', () => {
   });
 
   it('should be checkMinAmount', () => {
-    const cEdge = { pair: 'XMRUSDT', fromAsset: 'XMR', toAsset: 'USDT', side: 'sell', price: 269.79, quantity: 4.613 } as any;
+    const cEdge = { pair: 'XMR/USDT', fromAsset: 'XMR', toAsset: 'USDT', side: 'sell', price: 269.79, quantity: 4.613 } as any;
     const ticker = {
       eventType: '24hrTicker',
       eventTime: 1622248480787,
@@ -45,7 +50,49 @@ describe('TradeService', () => {
       trades: 2652929,
     } as any;
 
-    const res = service.checkMinAmount(cEdge, ticker);
+    const res = checkMinAmount(cEdge, ticker);
     expect(res).toBeDefined();
+  });
+
+  it('testOrder', async (done) => {
+    const triangle: Triangle = {
+      id: 'BUSD-ETH-UFT',
+      edges: [
+        {
+          pair: 'ETH/BUSD',
+          fromAsset: 'BUSD',
+          toAsset: 'ETH',
+          side: 'buy',
+          price: 2605.9,
+          quantity: 2.56706,
+        },
+        {
+          pair: 'UFT/ETH',
+          fromAsset: 'ETH',
+          toAsset: 'UFT',
+          side: 'buy',
+          price: 0.0005856,
+          quantity: 5.83,
+        },
+        {
+          pair: 'UFT/BUSD',
+          fromAsset: 'UFT',
+          toAsset: 'BUSD',
+          side: 'sell',
+          price: 1.5288,
+          quantity: 88.46,
+        },
+      ],
+      rate: '0.18249885',
+      logs: {
+        aRate: 'a rate = 1 / 2605.9 = 0.00038374 ETH',
+        bRate: 'b rate = 0.00038374 / 0.0005856 = 0.65530153 UFT',
+        cRate: 'c rate = (0.65530153 x 1.5288 -1) x 100 = 0.18249885%',
+      },
+      time: 1622904641801,
+    };
+
+    await service.getTradeTriangle(triangle);
+    done();
   });
 });

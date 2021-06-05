@@ -1,11 +1,11 @@
 import { BinanceApiService, Ticker24Hr, Tickers } from '@arbitrage-libs/broker-api';
 import { Config } from '@arbitrage-libs/config';
 import { Logger } from '@arbitrage-libs/logger';
-import { divide, floor, getBigNumber, gt, gte, multiple } from '@arbitrage-libs/util';
+import { divide, floor, getBigNumber, gt, gte, lt, multiple } from '@arbitrage-libs/util';
 import { Injectable } from '@nestjs/common';
-import { Balance } from 'ccxt';
+import { Balance, Market } from 'ccxt';
 
-import { Edge, Triangle } from '../../models';
+import { Edge, TradeEdge, TradeStatus, TradeTriangle, Triangle } from '../../models';
 
 interface AssetBalance extends Balance {
   asset: string;
@@ -32,7 +32,7 @@ export class TradeService {
     }
 
     this.logger.log('TradeService', `采用第一名候补者:${bestCandidate.id},开始套利...`);
-    await this.testOrder(bestCandidate);
+    const tradeTriangle = await this.getTradeTriangle(bestCandidate);
   }
 
   /**
@@ -53,12 +53,12 @@ export class TradeService {
   }
 
   /**
-   * 模拟下单
+   * 获得可交易三角组合信息
    *
    * @param triangle
    * @private
    */
-  private async testOrder(triangle: Triangle): Promise<void> {
+  async getTradeTriangle(triangle: Triangle): Promise<TradeTriangle> {
     const balance = await this.rest.getBalance();
     const freeAssetList: AssetBalance[] = [];
     for (const assetName of Object.keys(balance)) {
@@ -67,25 +67,64 @@ export class TradeService {
       }
     }
     if (freeAssetList.length === 0) {
-      this.logger.warn('TradeService-testOrder', `未查找到持有资产!!`);
+      this.logger.warn('TradeService-getTradeTriangle', `未查找到持有资产!!`);
       return;
     }
 
-    this.logger.info('TradeService-testOrder', triangle.rate);
+    this.logger.info('TradeService-getTradeTriangle', triangle.rate);
     const [a, b, c] = triangle.edges;
 
     // 使用货币
     const useAssetA = a.side === 'buy' ? a.fromAsset : a.toAsset;
     const balanceA = balance[useAssetA];
     if (!balanceA || getBigNumber(balanceA.free).isZero()) {
-      this.logger.warn('TradeService-testOrder', `未查找到持有A边(${a.pair})的报价货币(${useAssetA})资产!!`);
+      this.logger.warn('TradeService-getTradeTriangle', `未查找到持有A边(${a.pair})的报价货币(${useAssetA})资产!!`);
       return;
     }
-    debugger;
+
+    const pairInfoA = this.getPairInfo(a.pair);
+    if (!pairInfoA) {
+      return;
+    }
+
+    const minAmountA = pairInfoA.limits.amount.min;
+
+    // 可用余额 < 使用货币最小交易量
+    if (lt(balanceA.free, minAmountA)) {
+      this.logger.info('TradeService-getTradeTriangle', `${useAssetA}的可用余额(${balanceA.free}),小于最小交易量(${minAmountA} )！！`);
+      return;
+    }
+
+    const tradeEdgeA = initTradeEdge(a, minAmountA);
+
+    const pairInfoB = this.getPairInfo(b.pair);
+    if (!pairInfoB) {
+      return;
+    }
+
+    const preciionAmountB = pairInfoB.precision.amount;
+    const amountB = floor(divide(tradeEdgeA.quantity, b.price), preciionAmountB).toNumber();
+    const tradeEdgeB = initTradeEdge(b, amountB);
+    const tradeEdgeC = initTradeEdge(c, amountB);
+
+    return {
+      ...triangle,
+      edges: [tradeEdgeA, tradeEdgeB, tradeEdgeC],
+    };
+  }
+
+  private getPairInfo(pairName: string): Market | undefined {
+    const pairInfo = this.rest.getPairInfo(pairName);
+    if (!pairInfo) {
+      this.logger.warn('TradeService-getPairMinAmount', `未查找到(${pairName})的交易对信息!!`);
+      return;
+    }
+
+    return pairInfo;
   }
 }
 
-function checkMinAmount(cEdge: Edge, ticker?: Ticker24Hr): boolean {
+export function checkMinAmount(cEdge: Edge, ticker?: Ticker24Hr): boolean {
   const toAssetFn = cEdge.side === 'sell' ? multiple : divide;
   const toAssetAmount = toAssetFn(cEdge.quantity, cEdge.price);
   // ticker不传值时，则此标的报价货币为BTC
@@ -99,4 +138,12 @@ function checkMinAmount(cEdge: Edge, ticker?: Ticker24Hr): boolean {
   }
 
   return gte(btcAmount, Config.root.minAmount);
+}
+
+function initTradeEdge(edge: Edge, quantity: number): TradeEdge {
+  return {
+    ...edge,
+    quantity,
+    status: TradeStatus.Todo,
+  };
 }

@@ -96,7 +96,7 @@ export class EngineService implements OnModuleInit {
     let edge: Edge;
     if (buyTicker) {
       edge = {
-        pair: buyTicker.symbol,
+        pair: `${toAsset}/${fromAsset}`,
         fromAsset,
         toAsset,
         side: 'buy',
@@ -110,7 +110,7 @@ export class EngineService implements OnModuleInit {
         return;
       }
       edge = {
-        pair: sellTicker.symbol,
+        pair: `${fromAsset}/${toAsset}`,
         fromAsset,
         toAsset,
         side: 'sell',

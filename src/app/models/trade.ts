@@ -1,4 +1,16 @@
 /**
+ * 交易状态
+ */
+export const TradeStatus = {
+  Open: 'open',
+  Closed: 'closed',
+  Canceled: 'canceled',
+  Todo: 'todo',
+} as const;
+
+export type TradeStatus = typeof TradeStatus[keyof typeof TradeStatus];
+
+/**
  * 三角组合的边
  */
 export interface Edge {
@@ -13,6 +25,10 @@ export interface Edge {
   quantity: number;
 }
 
+export interface TradeEdge extends Edge {
+  status: TradeStatus;
+}
+
 /**
  * 三角组合
  */
@@ -25,6 +41,13 @@ export interface Triangle {
   // 时间戳
   time: number;
   logs: TriangleRateLogs;
+}
+
+/**
+ * 可交易三角组合
+ */
+export interface TradeTriangle extends Triangle {
+  edges: TradeEdge[];
 }
 
 export interface ABCAssetName {

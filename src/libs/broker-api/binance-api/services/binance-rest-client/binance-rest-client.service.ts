@@ -1,7 +1,7 @@
 import { Config } from '@arbitrage-libs/config';
 import { Injectable } from '@nestjs/common';
 import * as ccxt from 'ccxt';
-import { Balances } from 'ccxt';
+import { Balances, Market } from 'ccxt';
 
 import { AssetMarkets, Pairs } from '../../types';
 
@@ -35,6 +35,10 @@ export class BinanceRestClient {
 
   getBalance(): Promise<Balances> {
     return this.ccxt.fetchBalance();
+  }
+
+  getPairInfo(pairName: string): Market | undefined {
+    return this.pairs[pairName];
   }
 
   private async getPairs(): Promise<Pairs> {
