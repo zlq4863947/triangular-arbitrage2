@@ -1,9 +1,9 @@
 import { Config } from '@arbitrage-libs/config';
 import { Injectable } from '@nestjs/common';
 import * as ccxt from 'ccxt';
-import { Balances, Market } from 'ccxt';
+import { Balances, Market, Order } from 'ccxt';
 
-import { AssetMarkets, Pairs } from '../../types';
+import { AssetMarkets, OrderParams, Pairs } from '../../types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const binance = require('binance');
@@ -39,6 +39,10 @@ export class BinanceRestClient {
 
   getPairInfo(pairName: string): Market | undefined {
     return this.pairs[pairName];
+  }
+
+  createOrder(params: OrderParams): Promise<Order | undefined> {
+    return this.ccxt.createOrder(params.symbol, params.type, params.side, params.amount, params.price);
   }
 
   private async getPairs(): Promise<Pairs> {

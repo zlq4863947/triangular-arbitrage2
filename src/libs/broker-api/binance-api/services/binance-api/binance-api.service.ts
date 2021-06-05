@@ -11,6 +11,6 @@ export class BinanceApiService implements OnModuleInit {
   async onModuleInit(): Promise<void> {
     this.logger.log('BinanceApiService', `The module has been onModuleInit.`);
     await this.rest.initialize();
-    this.ws.initialize();
+    this.ws.initialize(this.rest.getListenKeyRest());
   }
 }

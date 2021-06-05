@@ -92,7 +92,46 @@ describe('TradeService', () => {
       time: 1622904641801,
     };
 
-    await service.getTradeTriangle(triangle);
+    const tradeTriangle = await service.getTradeTriangle(triangle);
+    expect(tradeTriangle).toEqual({
+      id: 'BUSD-ETH-UFT',
+      edges: [
+        {
+          pair: 'ETH/BUSD',
+          fromAsset: 'BUSD',
+          toAsset: 'ETH',
+          side: 'buy',
+          price: 2605.9,
+          quantity: 0.00001,
+          status: 'todo',
+        },
+        {
+          pair: 'UFT/ETH',
+          fromAsset: 'ETH',
+          toAsset: 'UFT',
+          side: 'buy',
+          price: 0.0005856,
+          quantity: 0.01,
+          status: 'todo',
+        },
+        {
+          pair: 'UFT/BUSD',
+          fromAsset: 'UFT',
+          toAsset: 'BUSD',
+          side: 'sell',
+          price: 1.5288,
+          quantity: 0.01,
+          status: 'todo',
+        },
+      ],
+      rate: '0.18249885',
+      logs: {
+        aRate: 'a rate = 1 / 2605.9 = 0.00038374 ETH',
+        bRate: 'b rate = 0.00038374 / 0.0005856 = 0.65530153 UFT',
+        cRate: 'c rate = (0.65530153 x 1.5288 -1) x 100 = 0.18249885%',
+      },
+      time: 1622904641801,
+    });
     done();
   });
 });

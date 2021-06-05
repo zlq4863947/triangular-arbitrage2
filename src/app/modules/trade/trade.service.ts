@@ -1,20 +1,32 @@
-import { BinanceApiService, Ticker24Hr, Tickers } from '@arbitrage-libs/broker-api';
+import { BinanceApiService, OrderParams, Ticker24Hr, Tickers } from '@arbitrage-libs/broker-api';
 import { Config } from '@arbitrage-libs/config';
 import { Logger } from '@arbitrage-libs/logger';
 import { divide, floor, getBigNumber, gt, gte, lt, multiple } from '@arbitrage-libs/util';
-import { Injectable } from '@nestjs/common';
-import { Balance, Market } from 'ccxt';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Balance, Market, Order } from 'ccxt';
 
 import { Edge, TradeEdge, TradeStatus, TradeTriangle, Triangle } from '../../models';
+import { OnDestroyService } from '../../shared';
 
 interface AssetBalance extends Balance {
   asset: string;
 }
 
 @Injectable()
-export class TradeService {
+export class TradeService extends OnDestroyService implements OnModuleInit {
+  private executeList: TradeTriangle[] = [];
   private rest = this.binanceApi.rest;
-  constructor(private logger: Logger, private binanceApi: BinanceApiService) {}
+  private ws = this.binanceApi.ws;
+
+  constructor(private logger: Logger, private binanceApi: BinanceApiService) {
+    super();
+  }
+
+  onModuleInit(): void {
+    this.ws.getUserData$().subscribe((data) => {
+      this.logger.log('getUserData$', `订阅数据:${JSON.stringify(data, null, 2)}`);
+    });
+  }
 
   async start(triangles: Triangle[], tickers: Tickers): Promise<void> {
     const bestCandidate = triangles[0];
@@ -33,6 +45,41 @@ export class TradeService {
 
     this.logger.log('TradeService', `采用第一名候补者:${bestCandidate.id},开始套利...`);
     const tradeTriangle = await this.getTradeTriangle(bestCandidate);
+    await this.executeTrade(tradeTriangle);
+  }
+
+  /**
+   * 执行套利交易
+   *
+   * @param tradeTriangle
+   */
+  async executeTrade(tradeTriangle: TradeTriangle): Promise<void> {
+    tradeTriangle.status = TradeStatus.Open;
+    tradeTriangle.openTime = Date.now();
+    this.logger.log('TradeService', `开始执行套利交易:${JSON.stringify(tradeTriangle)}`);
+    this.executeList.push(tradeTriangle);
+
+    await this.order(tradeTriangle.edges[0]);
+  }
+
+  private async order(edge: TradeEdge): Promise<Order | undefined> {
+    edge.status = TradeStatus.Open;
+    this.logger.log('TradeService', `执行限价单:${edge.pair}, 限价：${edge.price}, 数量：${edge.quantity}, 方向：${edge.side}`);
+
+    const orderParams: OrderParams = {
+      symbol: edge.pair,
+      side: edge.side,
+      type: 'limit',
+      price: edge.price,
+      amount: edge.quantity,
+    };
+    const orderInfo = await this.rest.createOrder(orderParams);
+    if (!orderInfo) {
+      return;
+    }
+    this.logger.debug('TradeService', `下单返回值: ${JSON.stringify(orderInfo, null, 2)}`);
+
+    return orderInfo;
   }
 
   /**
@@ -102,13 +149,15 @@ export class TradeService {
       return;
     }
 
-    const preciionAmountB = pairInfoB.precision.amount;
-    const amountB = floor(divide(tradeEdgeA.quantity, b.price), preciionAmountB).toNumber();
+    const precisionAmountB = pairInfoB.precision.amount;
+    const amountB = floor(divide(tradeEdgeA.quantity, b.price), precisionAmountB).toNumber();
     const tradeEdgeB = initTradeEdge(b, amountB);
     const tradeEdgeC = initTradeEdge(c, amountB);
 
     return {
       ...triangle,
+      openTime: 0,
+      status: TradeStatus.Todo,
       edges: [tradeEdgeA, tradeEdgeB, tradeEdgeC],
     };
   }

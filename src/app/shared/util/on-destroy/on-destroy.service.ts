@@ -10,7 +10,6 @@ export class OnDestroyService implements OnModuleDestroy {
   constructor() {}
 
   onModuleDestroy(): void {
-    console.log('OnDestroyService', `The module has been onModuleDestroy.`);
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
   }

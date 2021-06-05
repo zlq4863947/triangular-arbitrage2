@@ -8,9 +8,11 @@ import { WebsocketHandler } from '../websocket-handler/websocket-handler.service
 
 @Injectable()
 export class BinanceWebsocketClient {
+  private rest: any;
   constructor(private websocketHandler: WebsocketHandler) {}
 
-  initialize(): void {
+  initialize(rest: any): void {
+    this.rest = rest;
     this.websocketHandler.initialize();
   }
 
@@ -28,8 +30,8 @@ export class BinanceWebsocketClient {
     return this.websocketHandler.unsubscribe(WsMarketEndpoints.AllTickers);
   }
 
-  getUserData$(rest: any): Observable<UserData> {
-    return this.websocketHandler.subscribeUserData<UserData>(WsEndpoints.UserData, rest);
+  getUserData$(rest?: any): Observable<UserData> {
+    return this.websocketHandler.subscribeUserData<UserData>(WsEndpoints.UserData, rest ? rest : this.rest);
   }
 
   disposeExecutionReport(): void {

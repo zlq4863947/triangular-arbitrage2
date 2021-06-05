@@ -48,6 +48,8 @@ export interface Triangle {
  */
 export interface TradeTriangle extends Triangle {
   edges: TradeEdge[];
+  status: TradeStatus;
+  openTime: number;
 }
 
 export interface ABCAssetName {
