@@ -7,8 +7,9 @@ export function isAllowedLogLevel(minLogLevel: LogLevels, target: LogLevels): bo
     Debug: 1,
     Log: 2,
     Info: 3,
-    Warn: 4,
-    Error: 5,
+    Event: 4,
+    Warn: 5,
+    Error: 6,
   };
   return logLevelStrength[target] >= logLevelStrength[minLogLevel];
 }
@@ -24,6 +25,7 @@ export function makeColoredLogArgs(logLevel: LogLevels, levelSpace: string, tag:
     Debug: colorLevel(LogLevels.Debug, levelSpace),
     Log: colorLevel(LogLevels.Log, levelSpace),
     Info: colorLevel(LogLevels.Info, levelSpace),
+    Event: colorLevel(LogLevels.Event, levelSpace),
     Warn: colorLevel(LogLevels.Warn, levelSpace),
     Error: colorLevel(LogLevels.Error, levelSpace),
   };

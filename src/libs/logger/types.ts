@@ -4,12 +4,14 @@ export enum LogLevels {
   Info = 'Info',
   Warn = 'Warn',
   Error = 'Error',
+  Event = 'Event',
 }
 
 export enum LogLevelColors {
   Debug = '#263238',
   Log = '#33691E',
   Info = '#01579B',
+  Event = '#f601ff',
   Warn = '#BF360C',
   Error = '#B71C1C',
 }

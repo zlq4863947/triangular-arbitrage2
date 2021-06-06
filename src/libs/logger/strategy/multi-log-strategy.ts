@@ -10,6 +10,7 @@ export enum LogCategory {
   App = 'app',
   Debug = 'debug',
   Error = 'error',
+  Event = 'event',
 }
 
 const defaultAppender = {
@@ -43,9 +44,10 @@ export class MultiLogStrategy implements LogStrategy {
     this.loggerMap.set(LogCategory.App, getLogger(LogCategory.App));
     this.loggerMap.set(LogCategory.Debug, getLogger(LogCategory.Debug));
     this.loggerMap.set(LogCategory.Error, getLogger(LogCategory.Error));
+    this.loggerMap.set(LogCategory.Event, getLogger(LogCategory.Event));
   }
 
-  log(logLevel: LogLevels, tag: string, ...data: unknown[]) {
+  log(logLevel: LogLevels, tag: string, ...data: unknown[]): void {
     const colorMessage = getLogContent(this.enableColors, logLevel, tag, ...data).join('');
     const message = getLogContent(false, logLevel, tag, ...data).join('');
     switch (logLevel) {
@@ -64,6 +66,11 @@ export class MultiLogStrategy implements LogStrategy {
       case LogLevels.Error: {
         this.loggerMap.get(LogCategory.Error).error(message);
         getLogger('console').error(colorMessage);
+        return;
+      }
+      case LogLevels.Event: {
+        this.loggerMap.get(LogCategory.Event).info(message);
+        getLogger('console').info(colorMessage);
         return;
       }
     }

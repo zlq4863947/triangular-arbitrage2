@@ -10,6 +10,14 @@ const binance = require('binance');
 
 describe('BinanceWebsocketClientService', () => {
   let service: BinanceWebsocketClient;
+  const rest = new binance.BinanceRest({
+    key: Config.credential.apiKey,
+    secret: Config.credential.secret,
+    timeout: 15000,
+    recvWindow: 10000,
+    disableBeautification: false,
+    handleDrift: false,
+  });
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,7 +26,7 @@ describe('BinanceWebsocketClientService', () => {
     }).compile();
 
     service = module.get<BinanceWebsocketClient>(BinanceWebsocketClient);
-    service.initialize();
+    service.initialize(rest);
   });
 
   it('should be defined', () => {
@@ -33,15 +41,6 @@ describe('BinanceWebsocketClientService', () => {
   });
 
   it('should get getUserData$', (done) => {
-    const rest = new binance.BinanceRest({
-      key: Config.credential.apiKey,
-      secret: Config.credential.secret,
-      timeout: 15000,
-      recvWindow: 10000,
-      disableBeautification: false,
-      handleDrift: false,
-    });
-
     service.getUserData$(rest).subscribe((data) => {
       expect(data).toBeDefined();
       done();

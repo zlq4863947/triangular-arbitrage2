@@ -16,27 +16,31 @@ export class Logger extends NestLogger {
     super();
   }
 
-  debug(tag: string, ...data: unknown[]) {
+  debug(tag: string, ...data: unknown[]): void {
     this.requestLog(LogLevels.Debug, tag, ...data);
   }
 
-  log(tag: string, ...data: unknown[]) {
+  log(tag: string, ...data: unknown[]): void {
     this.requestLog(LogLevels.Log, tag, ...data);
   }
 
-  info(tag: string, ...data: unknown[]) {
+  info(tag: string, ...data: unknown[]): void {
     this.requestLog(LogLevels.Info, tag, ...data);
   }
 
-  warn(tag: string, ...data: unknown[]) {
+  warn(tag: string, ...data: unknown[]): void {
     this.requestLog(LogLevels.Warn, tag, ...data);
   }
 
-  error(tag: string, ...data: unknown[]) {
+  error(tag: string, ...data: unknown[]): void {
     this.requestLog(LogLevels.Error, tag, ...data);
   }
 
-  private requestLog(logLevel: LogLevels, tag: string, ...data: unknown[]) {
+  event(tag: string, ...data: unknown[]): void {
+    this.requestLog(LogLevels.Event, tag, ...data);
+  }
+
+  private requestLog(logLevel: LogLevels, tag: string, ...data: unknown[]): void {
     if (!isAllowedLogLevel(this.minLogLevel, logLevel)) {
       return; // skip
     }

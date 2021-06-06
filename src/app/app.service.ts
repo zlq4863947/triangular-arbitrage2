@@ -1,4 +1,3 @@
-import { BinanceApiService } from '@arbitrage-libs/broker-api';
 import { Logger } from '@arbitrage-libs/logger';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 
@@ -16,7 +15,7 @@ export class AppService extends OnDestroyService implements OnModuleInit {
   }
 
   start(): void {
-    this.logger.log('AppService', `启动三角套利机器人...`);
+    this.logger.info('AppService', `启动三角套利机器人...`);
 
     this.engineService.getCandidates$().subscribe((triangles) => this.tradeService.start(triangles, this.engineService.tickers));
     // this.engineService.getCandidates$().subscribe(this.printTable);

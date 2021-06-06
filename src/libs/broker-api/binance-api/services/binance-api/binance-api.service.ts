@@ -9,7 +9,7 @@ export class BinanceApiService implements OnModuleInit {
   constructor(private logger: Logger, public ws: BinanceWebsocketClient, public rest: BinanceRestClient) {}
 
   async onModuleInit(): Promise<void> {
-    this.logger.log('BinanceApiService', `The module has been onModuleInit.`);
+    this.logger.info('BinanceApiService', `The module has been onModuleInit.`);
     await this.rest.initialize();
     this.ws.initialize(this.rest.getListenKeyRest());
   }

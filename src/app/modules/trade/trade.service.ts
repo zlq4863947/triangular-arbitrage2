@@ -28,21 +28,21 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
         this.onOrderFilled(data);
         return;
       }
-      this.logger.debug('getUserData$', `订阅数据:${JSON.stringify(data, null, 2)}`);
+      this.logger.event('getUserData$', `订阅数据:${JSON.stringify(data)}`);
     });
   }
 
   onOrderFilled(data: UserData): void {
-    this.logger.debug('onOrderFilled', `订阅数据:${JSON.stringify(data, null, 2)}`);
+    this.logger.debug('onOrderFilled', `订阅数据:${JSON.stringify(data)}`);
     this.executeMap.forEach(async (execute) => {
       const index = execute.edges.findIndex((o) => o.id === data.newClientOrderId);
       if (index >= 2) {
-        this.logger.log('TradeService', `${execute.id}已完成套利!`);
+        this.logger.info('TradeService', `${execute.id}已完成套利!`);
         this.executeMap.delete(execute.id);
         return;
       }
       const nextEdge = execute.edges[index + 1];
-      this.logger.log('TradeService', `${execute.edges[index].pair}已成交，执行下一阶段${nextEdge.pair}交易...`);
+      this.logger.info('TradeService', `${execute.edges[index].pair}已成交，执行下一阶段${nextEdge.pair}交易...`);
       await this.order(nextEdge);
     });
   }
@@ -65,7 +65,7 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
       return;
     }
 
-    this.logger.log('TradeService', `采用第一名候补者:${bestCandidate.id},开始套利...`);
+    this.logger.info('TradeService', `采用第一名候补者:${bestCandidate.id},开始套利...`);
     this.logger.debug('TradeService', `候补者信息: ${JSON.stringify(bestCandidate)}`);
     const tradeTriangle = await this.getTradeTriangle(bestCandidate);
     await this.executeTrade(tradeTriangle);
@@ -79,7 +79,7 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
   async executeTrade(tradeTriangle: TradeTriangle): Promise<void> {
     tradeTriangle.status = TradeStatus.Open;
     tradeTriangle.openTime = Date.now();
-    this.logger.log('TradeService', `开始执行套利交易:${JSON.stringify(tradeTriangle)}`);
+    this.logger.info('TradeService', `开始执行套利交易:${JSON.stringify(tradeTriangle)}`);
     this.executeMap.set(tradeTriangle.id, tradeTriangle);
 
     await this.order(tradeTriangle.edges[0]);
@@ -87,7 +87,7 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
 
   private async order(edge: TradeEdge): Promise<Order | undefined> {
     edge.status = TradeStatus.Open;
-    this.logger.log('TradeService', `执行限价单:${edge.pair}, 限价：${edge.price}, 数量：${edge.quantity}, 方向：${edge.side}`);
+    this.logger.info('TradeService', `执行限价单:${edge.pair}, 限价：${edge.price}, 数量：${edge.quantity}, 方向：${edge.side}`);
 
     const orderParams: OrderParams = {
       symbol: edge.pair,
@@ -101,7 +101,7 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
     if (!orderInfo) {
       return;
     }
-    this.logger.debug('TradeService', `下单返回值: ${JSON.stringify(orderInfo, null, 2)}`);
+    this.logger.info('TradeService', `下单返回值: ${JSON.stringify(orderInfo)}`);
 
     return orderInfo;
   }
@@ -117,7 +117,7 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
     let result = true;
     if (!gt(crossRate, fee)) {
       result = false;
-      this.logger.log('TradeService-checkTradeCost', `预期交叉汇率(${crossRate}) < 交易成本(${fee}), 退出套利...`);
+      this.logger.info('TradeService-checkTradeCost', `预期交叉汇率(${crossRate}) < 交易成本(${fee}), 退出套利...`);
     }
 
     return result;
@@ -175,10 +175,10 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
     const feeB = this.rest.pairFees[b.pair].maker;
 
     const feeC = this.rest.pairFees[c.pair].maker;
-    let amountB = floor(divide(actualAmountA, b.price), precisionAmountB).toNumber();
+    let amountB = ceil(divide(actualAmountA, b.price), precisionAmountB).toNumber();
     if (feeB > 0) {
       this.logger.info('TradeService-getTradeTriangle', `B边手续费(${feeB}),重新计算A边订单数量。`);
-      amountB = ceil(add(amountB, multiple(amountB, feeB)), precisionAmountB).toNumber();
+      amountB = ceil(add(add(amountB, multiple(amountB, feeB)), multiple(amountB, 0.1)), precisionAmountB).toNumber();
       const expectFilledAmount = multiple(amountB, b.price);
       tradeEdgeA.quantity = ceil(divide(expectFilledAmount, a.price), pairInfoA.precision.amount).toNumber();
     }

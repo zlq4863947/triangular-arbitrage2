@@ -420,4 +420,67 @@ describe('TradeService', () => {
     });
     done();
   });
+
+  it('getTradeTriangle #7', async (done) => {
+    const triangle: Triangle = {
+      id: 'BUSD-DAI-BTC',
+      edges: [
+        { pair: 'BUSD/DAI', fromAsset: 'BUSD', toAsset: 'DAI', side: 'sell', price: 0.9987, quantity: 129666.37 },
+        { pair: 'BTC/DAI', fromAsset: 'DAI', toAsset: 'BTC', side: 'buy', price: 35958.89, quantity: 0.335486 },
+        { pair: 'BTC/BUSD', fromAsset: 'BTC', toAsset: 'BUSD', side: 'sell', price: 35990.37, quantity: 0.298124 },
+      ],
+      rate: '0.08754441',
+      logs: { aRate: '', bRate: 'b rate = 1 / 35958.89 = 0.0000278 BTC', cRate: 'c rate = (0.0000278 x 35990.37 -1) x 100 = 0.08754441%' },
+      time: 1622976861190,
+    };
+    const tradeTriangle = await service.getTradeTriangle(triangle);
+    expect(tradeTriangle).toEqual({
+      id: 'BUSD-USDT-BTC',
+      edges: [
+        {
+          pair: 'BUSD/USDT',
+          fromAsset: 'BUSD',
+          toAsset: 'USDT',
+          side: 'sell',
+          price: 0.9995,
+          quantity: 11.04,
+          fee: 0,
+          id: 'BUSDUSDT_1622962644322',
+          status: 'todo',
+        },
+        {
+          pair: 'BTC/USDT',
+          fromAsset: 'USDT',
+          toAsset: 'BTC',
+          side: 'buy',
+          price: 35801.2,
+          quantity: 0.000308,
+          fee: 0.001,
+          id: 'BTCUSDT_1622962644323',
+          status: 'todo',
+        },
+        {
+          pair: 'BTC/BUSD',
+          fromAsset: 'BTC',
+          toAsset: 'BUSD',
+          side: 'sell',
+          price: 35816.17,
+          quantity: 0.000307,
+          fee: 0,
+          id: 'BTCBUSD_1622962644323',
+          status: 'todo',
+        },
+      ],
+      rate: '0.04181424',
+      logs: {
+        aRate: '',
+        bRate: 'b rate = 1 / 35801.2 = 0.00002793 BTC',
+        cRate: 'c rate = (0.00002793 x 35816.17 -1) x 100 = 0.04181424%',
+      },
+      time: 1622961342209,
+      openTime: 0,
+      status: 'todo',
+    });
+    done();
+  });
 });
