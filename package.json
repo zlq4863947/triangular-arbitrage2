@@ -4,6 +4,10 @@
   "description": "a server side application for perform triangular arbitrage.",
   "author": "zlq4863947@gmail.com",
   "license": "GPL3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zlq4863947/triangular-arbitrage2.git"
+  },
   "scripts": {
     "deploy:clean": "rimraf dist/bundle.js dist/triangular-arbitrage2",
     "deploy:all": "yarn build:app && gulp gzip && gulp zip && yarn deploy:clean",
