@@ -1,10 +1,9 @@
 {
   "name": "triangular-arbitrage2",
   "version": "1.0",
-  "description": "",
+  "description": "a server side application for perform triangular arbitrage.",
   "author": "zlq4863947@gmail.com",
-  "private": true,
-  "license": "UNLICENSED",
+  "license": "GPL3",
   "scripts": {
     "deploy:clean": "rimraf dist/bundle.js dist/triangular-arbitrage2",
     "deploy:all": "yarn build:app && gulp gzip && gulp zip && yarn deploy:clean",
