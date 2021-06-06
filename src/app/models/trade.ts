@@ -26,6 +26,8 @@ export interface Edge {
 }
 
 export interface TradeEdge extends Edge {
+  id: string;
+  fee: number;
   status: TradeStatus;
 }
 

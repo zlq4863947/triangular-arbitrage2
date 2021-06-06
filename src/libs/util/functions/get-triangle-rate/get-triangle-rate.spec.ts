@@ -37,4 +37,40 @@ describe('getTriangleRate util functions', () => {
       },
     });
   });
+
+  it('getTriangleRate #2', () => {
+    const a: Edge = {
+      pair: 'BUSD/USDT',
+      fromAsset: 'BUSD',
+      toAsset: 'USDT',
+      side: 'sell',
+      price: 0.9998,
+      quantity: 13703885.49,
+    };
+    const b: Edge = {
+      pair: 'BTC/USDT',
+      fromAsset: 'USDT',
+      toAsset: 'BTC',
+      side: 'buy',
+      price: 35097.01,
+      quantity: 0.068097,
+    };
+    const c: Edge = {
+      pair: 'BTC/BUSD',
+      fromAsset: 'BTC',
+      toAsset: 'BUSD',
+      side: 'sell',
+      price: 35105.65,
+      quantity: 0.007184,
+    };
+    const res = getTriangleRate(a, b, c);
+    expect(res).toEqual({
+      rate: '0.02461748',
+      logs: {
+        aRate: '',
+        bRate: 'b rate = 1 / 35097.01 = 0.00002849 BTC',
+        cRate: 'c rate = (0.00002849 x 35105.65 -1) x 100 = 0.02461748%',
+      },
+    });
+  });
 });

@@ -1,3 +1,4 @@
+import { TradeFee } from '@arbitrage-libs/broker-api';
 import { Market } from 'ccxt';
 
 export interface Pairs {
@@ -10,4 +11,8 @@ export interface AssetMarkets {
 
 export interface AssetMarket {
   [asset: string]: Market;
+}
+
+export interface PairFees {
+  [pair: string]: TradeFee;
 }

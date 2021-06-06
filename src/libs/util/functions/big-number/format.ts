@@ -41,6 +41,34 @@ export function floorToFixed(value: BigNumber.Value, decimalPlace = 0): string {
 }
 
 /**
+ * get celled number by specific decimal places.
+ *
+ * @param {number} value - number to floor.
+ * @param {number} decimalPlace - where to floor.
+ * @returns {number}
+ */
+export function ceil(value: BigNumber.Value, decimalPlace = 0): BigNumber {
+  if (decimalPlace === 0) {
+    return getBigNumberStrictly(value).integerValue(BigNumber.ROUND_CEIL);
+  }
+
+  const characteristic = getBigNumberStrictly(10).pow(decimalPlace);
+
+  return getBigNumberStrictly(value).multipliedBy(characteristic).integerValue(BigNumber.ROUND_CEIL).dividedBy(characteristic);
+}
+
+/**
+ * get celled number by specific decimal places.
+ *
+ * @param {number} value - number to floor.
+ * @param {number} decimalPlace - where to floor.
+ * @returns {number}
+ */
+export function ceilToString(value: BigNumber.Value, decimalPlace = 0): string {
+  return ceil(value, decimalPlace).toString();
+}
+
+/**
  * Fix value with provided digits.
  *
  * @param value

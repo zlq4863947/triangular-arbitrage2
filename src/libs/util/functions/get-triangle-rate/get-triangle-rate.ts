@@ -1,5 +1,5 @@
 import { Edge, TriangleRate, TriangleRateLogs } from '../../../../app/models';
-import { divide, floor, getBigNumber, multiple, subtract } from '../big-number';
+import { divide, floor, floorToString, getBigNumber, multiple, subtract } from '../big-number';
 
 /**
  * 通过三边信息，获取合成交叉汇率
@@ -10,12 +10,15 @@ import { divide, floor, getBigNumber, multiple, subtract } from '../big-number';
 export function getTriangleRate(a: Edge, b: Edge, c: Edge): TriangleRate {
   // 利率 = (1/priceA/priceB*priceC-1)-1
   const capital = getBigNumber(1);
-  let step1Rate = getBigNumber(a.price);
+  let step1Rate = getBigNumber(1);
   const logInfos = {} as TriangleRateLogs;
-  let unitAsset = a.toAsset;
+  let unitAsset = a.fromAsset;
   if (a.side === 'buy') {
+    unitAsset = a.toAsset;
     step1Rate = divide(capital, a.price);
     logInfos.aRate = `a rate = 1 / ${a.price} = ${floor(step1Rate, 8).toNumber()} ${unitAsset}`;
+  } else {
+    logInfos.aRate = '';
   }
   const fixedStep1Rate = floor(step1Rate, 8);
 
@@ -41,7 +44,7 @@ export function getTriangleRate(a: Edge, b: Edge, c: Edge): TriangleRate {
   logInfos.cRate = `c rate = (${fixedStep2Rate} ${operator} ${c.price} -1) x 100 = ${fixedStep3Rate.toNumber()}%`;
 
   return {
-    rate: fixedStep3Rate.toString(),
+    rate: floorToString(fixedStep3Rate, 8),
     logs: logInfos,
   };
 }

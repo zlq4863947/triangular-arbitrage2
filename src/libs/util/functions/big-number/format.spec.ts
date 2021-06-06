@@ -1,4 +1,4 @@
-import { abs, absToString, fix, floorToFixed, floorToString, stripZero } from './format';
+import { abs, absToString, ceilToString, fix, floorToFixed, floorToString, stripZero } from './format';
 
 describe('floorToString', () => {
   describe('for integer', () => {
@@ -32,6 +32,23 @@ describe('floorToFixed', () => {
       expect(floorToFixed('1.234567890', 7)).toBe('1.2345678');
       expect(floorToFixed('1.234567890', 8)).toBe('1.23456789');
       expect(floorToFixed('1.234567890', 9)).toBe('1.234567890');
+    });
+  });
+});
+
+describe('ceil', () => {
+  describe('When proper values are provided', () => {
+    it('should calculate values properly', () => {
+      expect(ceilToString('1.23456789', 0)).toBe('2');
+      expect(ceilToString('1.234567890', 1)).toBe('1.3');
+      expect(ceilToString('1.234567890', 2)).toBe('1.24');
+      expect(ceilToString('1.234567890', 3)).toBe('1.235');
+      expect(ceilToString('1.234567890', 4)).toBe('1.2346');
+      expect(ceilToString('1.234567890', 5)).toBe('1.23457');
+      expect(ceilToString('1.234567890', 6)).toBe('1.234568');
+      expect(ceilToString('1.234567890', 7)).toBe('1.2345679');
+      expect(ceilToString('1.234567890', 8)).toBe('1.23456789');
+      expect(ceilToString('1.234567890', 9)).toBe('1.23456789');
     });
   });
 });

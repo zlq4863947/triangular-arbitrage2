@@ -17,4 +17,9 @@ describe('BinanceRestClient', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('fetchTradingFees', async () => {
+    const res = await service.fetchTradingFees();
+    expect(Object.keys(res).length).toBeGreaterThan(0);
+  });
 });

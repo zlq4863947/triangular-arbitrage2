@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import * as ccxt from 'ccxt';
 import { Balances, Market, Order } from 'ccxt';
 
-import { AssetMarkets, OrderParams, Pairs } from '../../types';
+import { AssetMarkets, OrderParams, PairFees, Pairs } from '../../types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const binance = require('binance');
@@ -11,6 +11,7 @@ const binance = require('binance');
 @Injectable()
 export class BinanceRestClient {
   public pairs: Pairs;
+  public pairFees: PairFees;
   public assetMarkets: AssetMarkets;
   private _listenKeyRest: any;
   private ccxt: ccxt.binance;
@@ -26,6 +27,7 @@ export class BinanceRestClient {
     });
     this.ccxt = new ccxt.binance(Config.credential);
     this.pairs = await this.getPairs();
+    this.pairFees = await this.fetchTradingFees();
     await this.initAssetMarkets(Object.keys(this.pairs));
   }
 
@@ -42,7 +44,13 @@ export class BinanceRestClient {
   }
 
   createOrder(params: OrderParams): Promise<Order | undefined> {
-    return this.ccxt.createOrder(params.symbol, params.type, params.side, params.amount, params.price);
+    return this.ccxt.createOrder(params.symbol, params.type, params.side, params.amount, params.price, {
+      newClientOrderId: params.newClientOrderId,
+    });
+  }
+
+  fetchTradingFees(): Promise<PairFees> {
+    return this.ccxt.fetchTradingFees();
   }
 
   private async getPairs(): Promise<Pairs> {
