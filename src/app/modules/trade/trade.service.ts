@@ -1,7 +1,7 @@
-import { BinanceApiService, OrderParams, Ticker24Hr, Tickers, UserData } from '@arbitrage-libs/broker-api';
+import { BinanceApiService, OrderParams, Tickers, UserData } from '@arbitrage-libs/broker-api';
 import { Config } from '@arbitrage-libs/config';
 import { Logger } from '@arbitrage-libs/logger';
-import { add, ceil, divide, floor, getBigNumber, gt, gte, lt, multiple, subtract } from '@arbitrage-libs/util';
+import { add, ceil, divide, floor, getBigNumber, gt, lt, multiple, subtract } from '@arbitrage-libs/util';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { Balance, Market, Order } from 'ccxt';
 
@@ -48,27 +48,32 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
   }
 
   async start(triangles: Triangle[], tickers: Tickers): Promise<void> {
-    if (this.executeMap.size >= Config.root.sessionLimit) {
-      return;
-    }
-    const bestCandidate = triangles[0];
-
-    const cEdge = bestCandidate.edges[2];
-    let asset;
-    if (cEdge.toAsset !== 'BTC') {
-      asset = tickers[`${cEdge.toAsset}BTC`];
-      if (!asset) {
-        asset = tickers[`BTC${cEdge.toAsset}`];
+    try {
+      if (this.executeMap.size >= Config.root.sessionLimit) {
+        return;
       }
-    }
-    if (!checkMinAmount(cEdge, asset) || !this.checkTradeCost(bestCandidate.rate)) {
-      return;
-    }
+      const bestCandidate = triangles[0];
 
-    this.logger.info('TradeService', `采用第一名候补者:${bestCandidate.id},开始套利...`);
-    this.logger.debug('TradeService', `候补者信息: ${JSON.stringify(bestCandidate)}`);
-    const tradeTriangle = await this.getTradeTriangle(bestCandidate);
-    await this.executeTrade(tradeTriangle);
+      const cEdge = bestCandidate.edges[2];
+      let asset;
+      if (cEdge.toAsset !== 'BTC') {
+        asset = tickers[`${cEdge.toAsset}BTC`];
+        if (!asset) {
+          asset = tickers[`BTC${cEdge.toAsset}`];
+        }
+      }
+      if (!this.checkTradeCost(bestCandidate.rate)) {
+        return;
+      }
+
+      this.logger.info('TradeService', `采用第一名候补者:${bestCandidate.id},开始套利...`);
+      this.logger.debug('TradeService', `候补者信息: ${JSON.stringify(bestCandidate)}`);
+      const tradeTriangle = await this.getTradeTriangle(bestCandidate);
+      await this.executeTrade(tradeTriangle);
+    } catch (error) {
+      this.executeMap.delete(triangles[0].id);
+      this.logger.error('TradeService-start', error);
+    }
   }
 
   /**
@@ -94,7 +99,7 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
       side: edge.side,
       type: 'limit',
       price: edge.price,
-      amount: edge.quantity,
+      amount: edge.quantity / 10,
       newClientOrderId: edge.id,
     };
     const orderInfo = await this.rest.createOrder(orderParams);
@@ -113,11 +118,11 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
    * @private
    */
   private checkTradeCost(crossRate: string): boolean {
-    const fee = Config.activeBroker.fee;
+    const profitRate = Config.activeBroker.profitRate;
     let result = true;
-    if (!gt(crossRate, fee)) {
+    if (!gt(crossRate, profitRate)) {
       result = false;
-      this.logger.info('TradeService-checkTradeCost', `预期交叉汇率(${crossRate}) < 交易成本(${fee}), 退出套利...`);
+      this.logger.info('TradeService-checkTradeCost', `预期交叉汇率(${crossRate}) < 配置套利收益率(${profitRate}), 退出套利...`);
     }
 
     return result;
@@ -178,7 +183,7 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
     let amountB = ceil(divide(actualAmountA, b.price), precisionAmountB).toNumber();
     if (feeB > 0) {
       this.logger.info('TradeService-getTradeTriangle', `B边手续费(${feeB}),重新计算A边订单数量。`);
-      amountB = ceil(add(add(amountB, multiple(amountB, feeB)), multiple(amountB, 0.1)), precisionAmountB).toNumber();
+      amountB = ceil(add(amountB, multiple(amountB, feeB)), precisionAmountB).toNumber();
       const expectFilledAmount = multiple(amountB, b.price);
       tradeEdgeA.quantity = ceil(divide(expectFilledAmount, a.price), pairInfoA.precision.amount).toNumber();
     }
@@ -204,22 +209,6 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
 
     return pairInfo;
   }
-}
-
-export function checkMinAmount(cEdge: Edge, ticker?: Ticker24Hr): boolean {
-  const toAssetFn = cEdge.side === 'sell' ? multiple : divide;
-  const toAssetAmount = toAssetFn(cEdge.quantity, cEdge.price);
-  // ticker不传值时，则此标的报价货币为BTC
-  let btcAmount = toAssetAmount;
-  if (ticker) {
-    // btc实际汇率价格
-    const btcRatePrice = +ticker.currentClose;
-    // 判断标的货币是否为报价货币，报价货币时 除法
-    const toBtcFn = ticker.symbol === `BTC${cEdge.toAsset}` ? divide : multiple;
-    btcAmount = floor(toBtcFn(toAssetAmount, btcRatePrice), 8);
-  }
-
-  return gte(btcAmount, Config.root.minAmount);
 }
 
 function initTradeEdge(edge: Edge, quantity: number, fee: number): TradeEdge {
@@ -251,7 +240,7 @@ export function getEdgeAAmount(edge: Edge, pairInfo: Market, fee: number): numbe
   const limits = pairInfo.limits;
   const precision = pairInfo.precision.amount;
   const minAmount = divide(limits.cost.min, edge.price);
-  const attachedAmount = add(fee, multiple(minAmount, 0.1));
+  const attachedAmount = add(fee, multiple(minAmount, Config.root.orderTimes > 1 ? Config.root.orderTimes : 0.1));
 
   return floor(add(minAmount, attachedAmount), precision).toNumber();
 }

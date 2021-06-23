@@ -2,8 +2,8 @@
 
 # 套利交易所
 active = "binance"
-# 最小买入金额(BTC单位)
-minAmount = 0.002
+# 下单倍数(最小下单数量的倍数)
+orderTimes = 2
 # 最大同时进行的交易会话数
 sessionLimit = 1
 
@@ -14,8 +14,8 @@ sessionLimit = 1
 [broker]
   # binance
   [broker.binance]
-    # 套利手续费（例如: 0.05 x 3 = 0.15%）
-    fee = 0.15
+    # 套利收益率(利率需覆盖手续费,才可以盈利)
+    profitRate = 0.1
     # 起始货币数组(全市场都可作为起始币时：[]) 'BTC', 'ETH', 'USDT', 'BNB'
     startAssets = ['BTC', 'ETH', 'USDT', 'BNB']
     # 白名单(设置后C点货币,只会出现白名单列表中的货币)

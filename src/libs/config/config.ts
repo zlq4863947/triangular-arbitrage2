@@ -1,18 +1,14 @@
 export interface ConfigSettings {
   active: 'binance';
-  minAmount: number;
+  orderTimes: number;
   sessionLimit: number;
   broker: {
     [broker: string]: ConfigBroker;
   };
 }
 
-export enum SupportBroker {
-  Binance = 'binance',
-}
-
 export interface ConfigBroker {
-  fee: number;
+  profitRate: number;
   startAssets: string[];
   whitelist: string[];
   blacklist: string[];
