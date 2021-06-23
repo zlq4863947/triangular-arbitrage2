@@ -11,7 +11,7 @@
 
 ## 免责声明
 
-- `triangular-arbitrage2` 不是万无一失的百分比一定盈利交易机器人。需要您自行担风险使用它。
+- `triangular-arbitrage2` 不是万无一失、百分之百、一定盈利交易机器人。需要您自行担风险使用它。
 - 数字货币仍处于萌芽实验阶段，`triangular-arbitrage2`也是如此。这意味着，两种都可能随时失败。
 - `triangular-arbitrage2`分为 `Basic`(免费版) 和 `Pro`(付费版)。
   - `Basic`(免费版)，没有真实交易功能，您需要自行增加此功能，并承担由此产生的风险。
