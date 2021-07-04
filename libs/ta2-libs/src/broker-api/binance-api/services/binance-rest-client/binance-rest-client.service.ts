@@ -3,12 +3,15 @@ import { Injectable } from '@nestjs/common';
 import * as ccxt from 'ccxt';
 import { Balances, Market, Order } from 'ccxt';
 
+import { CatchError } from '../../../../../app/common/descriptors';
+import { DefaultExceptionHandler } from '../../../../../app/exceptions';
 import { AssetMarkets, OrderParams, PairFees, Pairs } from '../../types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const binance = require('binance');
 
 @Injectable()
+@CatchError(DefaultExceptionHandler)
 export class BinanceRestClient {
   public pairs: Pairs;
   public pairFees: PairFees;
@@ -43,8 +46,18 @@ export class BinanceRestClient {
     return this.pairs[pairName];
   }
 
+  fetchOrder(orderId: string, symbol: string): Promise<Order | undefined> {
+    return this.ccxt.fetchOrder(orderId, symbol);
+  }
+
   createOrder(params: OrderParams): Promise<Order | undefined> {
     return this.ccxt.createOrder(params.symbol, params.type, params.side, params.amount, params.price, {
+      newClientOrderId: params.newClientOrderId,
+    });
+  }
+
+  editOrder(id: string, params: OrderParams): Promise<Order | undefined> {
+    return this.ccxt.editOrder(id, params.symbol, params.type, params.side, params.amount, params.price, {
       newClientOrderId: params.newClientOrderId,
     });
   }

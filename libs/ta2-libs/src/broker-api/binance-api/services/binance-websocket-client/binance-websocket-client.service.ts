@@ -2,11 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { CatchError } from '../../../../../app/common/descriptors';
+import { DefaultExceptionHandler } from '../../../../../app/exceptions';
 import { WsEndpoints, WsMarketEndpoints } from '../../constants';
 import { Ticker24Hr, Tickers, UserData } from '../../types';
 import { WebsocketHandler } from '../websocket-handler/websocket-handler.service';
 
 @Injectable()
+@CatchError(DefaultExceptionHandler)
 export class BinanceWebsocketClient {
   private rest: any;
   constructor(private websocketHandler: WebsocketHandler) {}

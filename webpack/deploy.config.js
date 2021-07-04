@@ -54,7 +54,7 @@ module.exports = {
   stats: {
     // This is optional, but it hides noisey warnings
     warningsFilter: [
-      'node_modules/@nestjs/common/utils/load-package.util.js',
+      'node_modules/@nestjs/common/utils/load-package.utils.js',
       'node_modules/@nestjs/core/helpers/load-adapter.js',
       'node_modules/@nestjs/core/helpers/optional-require.js',
       'node_modules/express/lib/view.js',

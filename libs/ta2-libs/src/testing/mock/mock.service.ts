@@ -1,5 +1,5 @@
-import { Logger } from '@arbitrage-libs/logger';
 import { Injectable } from '@nestjs/common';
+import { Logger } from '@ta2-libs/logger';
 
 @Injectable()
 export class MockLogger implements Partial<Logger> {

@@ -1,23 +1,28 @@
-import { Logger } from '@arbitrage-libs/logger';
-import { Injectable, OnModuleInit } from '@nestjs/common';
-
-import { Triangle } from './models';
-import { EngineService, TradeService } from './modules';
-import { OnDestroyService } from './shared';
+import { Injectable } from '@nestjs/common';
+import { Logger } from '@ta2-libs/logger';
+import { Triangle } from '@ta2-libs/models';
+import { DataService, EngineService, OnDestroyService, TradeService } from '@ta2-libs/modules';
 
 import moment = require('moment');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const AsciiTable = require('ascii-table');
 
 @Injectable()
-export class AppService extends OnDestroyService implements OnModuleInit {
-  constructor(private logger: Logger, private engineService: EngineService, private tradeService: TradeService) {
+export class AppService extends OnDestroyService {
+  private name = 'AppService';
+
+  constructor(
+    private logger: Logger,
+    private dataService: DataService,
+    private engineService: EngineService,
+    private tradeService: TradeService,
+  ) {
     super();
   }
 
   start(): void {
-    this.logger.info('AppService', `启动三角套利机器人...`);
-
-    this.engineService.getCandidates$().subscribe((triangles) => this.tradeService.start(triangles, this.engineService.tickers));
+    this.logger.info(this.name, `启动三角套利机器人...`);
+    this.engineService.getTradableTriangle$().subscribe((triangle) => this.tradeService.start(triangle, this.dataService.tickers));
     // this.engineService.getCandidates$().subscribe(this.printTable);
   }
 
@@ -29,9 +34,5 @@ export class AppService extends OnDestroyService implements OnModuleInit {
     }
     console.log(table.toString());
     table.clear();
-  }
-
-  onModuleInit(): void {
-    this.logger.info('AppService', `The module has been onModuleInit.`);
   }
 }

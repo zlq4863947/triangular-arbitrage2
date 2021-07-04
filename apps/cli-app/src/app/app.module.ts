@@ -1,16 +1,15 @@
-import { BrokerApiModule } from '@arbitrage-libs/broker-api';
-import { LogLevels, LoggerModule, MultiLogStrategy } from '@arbitrage-libs/logger';
 import { Module } from '@nestjs/common';
+import { BrokerApiModule } from '@ta2-libs/broker-api';
+import { LogLevels, LoggerModule, MultiLogStrategy } from '@ta2-libs/logger';
+import { SharedModule } from '@ta2-libs/modules/shared';
 
 import { AppService } from './app.service';
-import { EngineModule, TradeModule } from './modules';
-import { SharedModule } from './shared';
 
 @Module({
   imports: [
-    EngineModule,
+    /*EngineModule,
     TradeModule,
-    BrokerApiModule,
+    BrokerApiModule,*/
     LoggerModule.forRoot({
       enableColors: true,
       minLogLevel: LogLevels.Debug,

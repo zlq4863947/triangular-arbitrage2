@@ -1,5 +1,5 @@
-import { Logger } from '@arbitrage-libs/logger';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Logger } from '@ta2-libs/logger';
 
 import { AppService } from './app.service';
 

@@ -15,10 +15,7 @@
       "@arbitrage-libs/*": [
         "src/libs/*"
       ],
-      "@app/ta2-libs": [
-        "libs/ta2-libs/src"
-      ],
-      "@app/ta2-libs/*": [
+      "@ta2-libs/*": [
         "libs/ta2-libs/src/*"
       ]
     }

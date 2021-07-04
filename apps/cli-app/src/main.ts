@@ -1,5 +1,5 @@
-import { Logger } from '@arbitrage-libs/logger';
 import { NestFactory } from '@nestjs/core';
+import { Logger } from '@ta2-libs/logger';
 
 import { AppModule, AppService } from './app';
 

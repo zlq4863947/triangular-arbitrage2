@@ -1,4 +1,4 @@
-import { Logger } from '@app/ta2-libs/logger';
+import { Logger } from '@arbitrage-libs/logger';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -15,6 +15,7 @@ interface StreamData<T> {
 }
 @Injectable()
 export class WebsocketHandler implements OnModuleDestroy {
+  private name = 'WebsocketHandler';
   private onDestroy$ = new Subject<true>();
 
   private wsWrapper: any;
@@ -65,7 +66,7 @@ export class WebsocketHandler implements OnModuleDestroy {
     if (!stream) {
       return;
     }
-    this.logger.debug('websocket-handler', 'unsubscribe stream', endpoint);
+    this.logger.debug(this.name, 'unsubscribe stream', endpoint);
     stream.subject.complete();
     stream.websocket.close();
     this.streamMap.delete(endpoint);
@@ -73,7 +74,7 @@ export class WebsocketHandler implements OnModuleDestroy {
   }
 
   unsubscribeAll(): void {
-    this.logger.debug('websocket-handler', 'unsubscribe all stream');
+    this.logger.debug(this.name, 'unsubscribe all stream');
     for (const endpoint of Array.from(this.streamMap.keys())) {
       this.unsubscribe(endpoint);
     }
@@ -92,7 +93,6 @@ export class WebsocketHandler implements OnModuleDestroy {
     }
 
     const subject = new Subject<T>();
-    this.logger.debug('websocket-handler', 'subject created', endpoint);
     const websocket = this.joinStream(endpoint, subject);
     this.streamMap.set(endpoint, { subject, websocket });
 
@@ -103,14 +103,13 @@ export class WebsocketHandler implements OnModuleDestroy {
     if (!this.joinedEndpointSet.has(endpoint)) {
       this.joinedEndpointSet.add(endpoint);
     }
-    this.logger.info('websocket-handler', 'join stream', endpoint);
     switch (endpoint) {
       case WsEndpoints.AllTickers: {
         return this.wsWrapper.onAllTickers((data) => subject.next(data));
       }
       case WsEndpoints.UserData: {
         if (!this.restWrapper) {
-          this.logger.error('websocket-handler', 'restWrapper is null', endpoint);
+          this.logger.error(this.name, 'restWrapper is null', endpoint);
           return;
         }
 
@@ -120,7 +119,6 @@ export class WebsocketHandler implements OnModuleDestroy {
   }
 
   private reJoinStreams(): void {
-    this.logger.info('websocket-handler', 'try to reJoinStreams.', this.joinedEndpointSet);
     this.joinedEndpointSet.forEach((endpoint) => {
       const stream = this.streamMap.get(endpoint);
       stream.websocket = this.joinStream(endpoint, stream.subject);

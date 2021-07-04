@@ -1,5 +1,6 @@
+import { InjectionToken } from '@ta2-libs/common';
+
 import { LogStrategy } from '../strategy';
-import { InjectionToken } from './injection-token';
 import { LogLevels } from './types';
 
 export const LOG_STRATEGY = new InjectionToken<LogStrategy>('LOG_STRATEGY');

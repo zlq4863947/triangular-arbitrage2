@@ -8,13 +8,13 @@
     "tsConfigPath": "apps/triangular-arbitrage2/tsconfig.app.json"
   },
   "projects": {
-    "triangular-arbitrage2": {
+    "cli-app": {
       "type": "application",
-      "root": "apps/triangular-arbitrage2",
+      "root": "apps/cli-app",
       "entryFile": "main",
-      "sourceRoot": "apps/triangular-arbitrage2/src",
+      "sourceRoot": "apps/cli-app/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/triangular-arbitrage2/tsconfig.app.json"
+        "tsConfigPath": "apps/cli-app/tsconfig.app.json"
       }
     },
     "pro-cli-app": {
