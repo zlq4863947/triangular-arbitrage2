@@ -1,5 +1,5 @@
-import { Logger } from '@arbitrage-libs/logger';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Logger } from '@ta2-libs/logger';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import * as WebSocket from 'ws';

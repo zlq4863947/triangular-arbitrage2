@@ -1,10 +1,10 @@
-import { Config } from '@arbitrage-libs/config';
 import { Injectable } from '@nestjs/common';
+import { CatchError } from '@ta2-libs/common';
+import { Config } from '@ta2-libs/config';
+import { DefaultExceptionHandler } from '@ta2-libs/exceptions';
 import * as ccxt from 'ccxt';
 import { Balances, Market, Order } from 'ccxt';
 
-import { CatchError } from '../../../../../app/common/descriptors';
-import { DefaultExceptionHandler } from '../../../../../app/exceptions';
 import { AssetMarkets, OrderParams, PairFees, Pairs } from '../../types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

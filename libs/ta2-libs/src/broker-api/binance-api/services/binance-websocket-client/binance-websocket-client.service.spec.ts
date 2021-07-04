@@ -1,6 +1,6 @@
-import { Config } from '@arbitrage-libs/config';
-import { MockModule } from '@arbitrage-libs/testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Config } from '@ta2-libs/config';
+import { MockModule } from '@ta2-libs/testing';
 
 import { WebsocketHandler } from '../websocket-handler/websocket-handler.service';
 import { BinanceWebsocketClient } from './binance-websocket-client.service';

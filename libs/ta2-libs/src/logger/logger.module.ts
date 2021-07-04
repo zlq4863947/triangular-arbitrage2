@@ -12,7 +12,6 @@ interface LoggerConfig {
   tagsExclude?: string[];
   tagsInclude?: string[];
 }
-
 @Global()
 @Module({
   providers: [Logger],

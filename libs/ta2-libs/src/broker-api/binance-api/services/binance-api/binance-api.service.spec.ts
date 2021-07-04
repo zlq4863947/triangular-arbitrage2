@@ -1,6 +1,6 @@
-import { BinanceApiModule, BinanceApiService } from '@arbitrage-libs/broker-api';
-import { MockModule } from '@arbitrage-libs/testing';
 import { Test, TestingModule } from '@nestjs/testing';
+import { BinanceApiModule, BinanceApiService } from '@ta2-libs/broker-api';
+import { MockModule } from '@ta2-libs/testing';
 
 describe('BinanceApiService', () => {
   let service: BinanceApiService;

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { CatchError } from '@ta2-libs/common';
+import { DefaultExceptionHandler } from '@ta2-libs/exceptions';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { CatchError } from '../../../../../app/common/descriptors';
-import { DefaultExceptionHandler } from '../../../../../app/exceptions';
 import { WsEndpoints, WsMarketEndpoints } from '../../constants';
 import { Ticker24Hr, Tickers, UserData } from '../../types';
 import { WebsocketHandler } from '../websocket-handler/websocket-handler.service';
