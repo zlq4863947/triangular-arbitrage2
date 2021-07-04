@@ -4,6 +4,8 @@
 active = "binance"
 # 下单倍数(最小下单数量的倍数)
 orderTimes = 2
+# 未成交订单巡查时间(一次性、单位: 秒)
+processingOrderPatrolTime = 60
 # 最大同时进行的交易会话数
 sessionLimit = 1
 
@@ -14,7 +16,7 @@ sessionLimit = 1
 [broker]
   # binance
   [broker.binance]
-    # 套利收益率(利率需覆盖手续费,才可以盈利)
+    # 套利收益率(利率需覆盖手续费,才可以盈利)。 单位为百分比,例如配置为0.1,实际含义:0.1%
     profitRate = 0.1
     # 起始货币数组(全市场都可作为起始币时：[]) 'BTC', 'ETH', 'USDT', 'BNB'
     startAssets = ['BTC', 'ETH', 'USDT', 'BNB']
@@ -33,3 +35,14 @@ sessionLimit = 1
     [broker.binance.test]
       apiKey = "xx"
       secret = "aaa"
+
+###
+### [pro]
+### 付费版专用功能
+###
+[pro]
+  # 三角套利执行策略
+  # 目前支持的值: 'queue'、'multi'
+  # queue: 将按照三边顺序执行下单（上一边未成交完成，将阻塞下一边），适用于三边交易对没有余额的情况
+  # multi: 将按照三边同时执行下单（上一边未成交完成，不阻塞下一边），适用于三边交易对都有余额的情况
+  strategy = 'queue'

@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { Config } from '@ta2-libs/config';
 import { Logger } from '@ta2-libs/logger';
 
 import { AppModule, AppService } from './app';
