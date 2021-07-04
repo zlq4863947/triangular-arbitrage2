@@ -8,15 +8,25 @@
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "baseUrl": "./",
     "noEmit": false,
     "incremental": false,
     "paths": {
       "@arbitrage-libs/*": [
         "src/libs/*"
+      ],
+      "@app/ta2-libs": [
+        "libs/ta2-libs/src"
+      ],
+      "@app/ta2-libs/*": [
+        "libs/ta2-libs/src/*"
       ]
     }
   },
-  "exclude": ["node_modules", "dist", "tools"]
+  "include": ["apps/**/*", "libs/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tools"
+  ]
 }

@@ -1,9 +1,9 @@
 import { Inject, Injectable, Logger as NestLogger } from '@nestjs/common';
 
-import { LogStrategy } from './strategy';
-import { LOG_STRATEGY, MIN_LOG_LEVEL, TAGS_EXCLUDE, TAGS_INCLUDE } from './tokens';
-import { LogLevels } from './types';
-import { isAllowedLogLevel } from './utils';
+import { LOG_STRATEGY, MIN_LOG_LEVEL, TAGS_EXCLUDE, TAGS_INCLUDE } from './common/tokens';
+import { LogLevels } from './common/types';
+import { isAllowedLogLevel } from './common/utils';
+import { LogStrategy } from './strategy/log-strategy';
 
 @Injectable()
 export class Logger extends NestLogger {

@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { ENABLE_COLORS } from '../tokens';
-import { LogLevels } from '../types';
-import { LogStrategy } from './log-strategy';
+import { ENABLE_COLORS, LogLevels } from '../common';
+import { LogStrategy } from '../strategy';
 import { getLogContent } from './utils';
 
 @Injectable()

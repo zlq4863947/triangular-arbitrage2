@@ -1,4 +1,39 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "apps/triangular-arbitrage2/src",
+  "monorepo": true,
+  "root": "apps/triangular-arbitrage2",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/triangular-arbitrage2/tsconfig.app.json"
+  },
+  "projects": {
+    "triangular-arbitrage2": {
+      "type": "application",
+      "root": "apps/triangular-arbitrage2",
+      "entryFile": "main",
+      "sourceRoot": "apps/triangular-arbitrage2/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/triangular-arbitrage2/tsconfig.app.json"
+      }
+    },
+    "pro-cli-app": {
+      "type": "application",
+      "root": "apps/pro-cli-app",
+      "entryFile": "main",
+      "sourceRoot": "apps/pro-cli-app/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/pro-cli-app/tsconfig.app.json"
+      }
+    },
+    "ta2-libs": {
+      "type": "library",
+      "root": "libs/ta2-libs",
+      "entryFile": "index",
+      "sourceRoot": "libs/ta2-libs/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/ta2-libs/tsconfig.lib.json"
+      }
+    }
+  }
 }

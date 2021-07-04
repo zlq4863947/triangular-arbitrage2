@@ -1,4 +1,4 @@
-import { Logger } from '@arbitrage-libs/logger';
+import { Logger } from '@app/ta2-libs/logger';
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';

@@ -1,9 +1,9 @@
 import { DynamicModule, Global, Module, Type } from '@nestjs/common';
 
+import { ENABLE_COLORS, LOG_STRATEGY, MIN_LOG_LEVEL, TAGS_EXCLUDE, TAGS_INCLUDE } from './common/tokens';
+import { LogLevels } from './common/types';
 import { Logger } from './logger';
 import { ConsoleLogStrategy, LogStrategy } from './strategy';
-import { ENABLE_COLORS, LOG_STRATEGY, MIN_LOG_LEVEL, TAGS_EXCLUDE, TAGS_INCLUDE } from './tokens';
-import { LogLevels } from './types';
 
 interface LoggerConfig {
   strategy?: Type<LogStrategy>;

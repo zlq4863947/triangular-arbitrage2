@@ -1,7 +1,6 @@
 import moment = require('moment');
 
-import { LogLevels } from '@arbitrage-libs/logger/types';
-import { makeColoredLogArgs } from '@arbitrage-libs/logger/utils';
+import { LogLevels, makeColoredLogArgs } from '../common';
 
 export function getLogContent(enableColors: boolean, logLevel: LogLevels, tag: string, ...data: unknown[]): string[] {
   let levelSpace = '';
