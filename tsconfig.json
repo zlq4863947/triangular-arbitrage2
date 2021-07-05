@@ -12,9 +12,6 @@
     "noEmit": false,
     "incremental": false,
     "paths": {
-      "@arbitrage-libs/*": [
-        "src/libs/*"
-      ],
       "@ta2-libs/*": [
         "libs/ta2-libs/src/*"
       ]

@@ -1,4 +1,4 @@
-import { LogLevels } from '../types';
+import { LogLevels } from '../common';
 import { ConsoleLogStrategy } from './console-log-strategy';
 
 describe('ConsoleLogStrategy', () => {

@@ -9,56 +9,43 @@ const gzip = require('gulp-gzip');
 const tar = require('gulp-tar');
 const zip = require('gulp-zip');
 
-const spawn = require('child_process').spawn;
+const util = require('util');
+
+const exec = util.promisify(require('child_process').exec);
 
 // read version property from package.json
 const packageInfo = require('../../package.json');
 const version = packageInfo.version;
-const appName = packageInfo.name;
 
-/* create version file to import */
-gulp.task('version', (cb: Function) => {
-  fs.writeFile('./src/environments/version.ts', `export const version = '${version}';\n`, (err) => {
-    if (err) {
-      throw err;
-    }
+const cliAppName = 'triangular-arbitrage2';
+const proCliAppName = 'triangular-arbitrage2-pro';
 
-    cb();
-  });
-});
-
-/* create hash file to import */
-gulp.task('hash', (cb: Function) => {
-  // read hash from git
-  // -  Note that this line executes the command when it is defined.
-  const ps = spawn('git', ['rev-parse', 'HEAD']);
-  ps.stdout.setEncoding('utf-8').on('data', (hash: string) => {
-    fs.writeFile('./src/environments/hash.ts', `export const hash = '${hash.replace(/\r?\n/g, '')}';\n`, (err) => {
-      if (err) {
-        throw err;
-      }
-
-      cb();
-    });
-  });
-});
-
-gulp.task('deploy', (cb: Function) => {
+function bundleApp(name: string, dirName: string) {
   const rootDir = './dist';
-  const deployDir = `${rootDir}/${appName}`;
+  const bundleDir = `${rootDir}/${dirName}`;
 
-  if (!fs.existsSync(deployDir)) {
-    fs.mkdirSync(deployDir);
+  if (!fs.existsSync(bundleDir)) {
+    fs.mkdirSync(bundleDir);
   }
-  fs.copyFileSync(`${rootDir}/bundle.js`, `${deployDir}/bundle.js`);
-  fs.writeFileSync(`${deployDir}/package.json`, getDeployPackageJson());
+  fs.copyFileSync(`${rootDir}/${name}-bundle.js`, `${bundleDir}/bundle.js`);
+  fs.writeFileSync(`${bundleDir}/package.json`, getDeployPackageJson(dirName));
 
-  const configDir = `${deployDir}/config`;
+  const configDir = `${bundleDir}/config`;
   if (!fs.existsSync(configDir)) {
     fs.mkdirSync(configDir);
   }
   fs.copyFileSync(`./config/default.sample.toml`, `${configDir}/default.toml`);
+}
 
+gulp.task('build', async (cb: Function) => {
+  await exec(`yarn webpack:build name=cli-app`);
+  await exec(`yarn webpack:build name=pro-cli-app`);
+  cb();
+});
+
+gulp.task('bundle', (cb: Function) => {
+  bundleApp('cli-app', cliAppName);
+  bundleApp('pro-cli-app', proCliAppName);
   cb();
 });
 
@@ -108,17 +95,36 @@ gulp.task('minify', () => {
   return minify;
 });
 
-gulp.task('gzip', () => {
+gulp.task('gzip:cli', () => {
   return gulp
-    .src(`./dist/${appName}/**`)
-    .pipe(tar(`${appName}-v${version}.tar`))
+    .src(`./dist/${cliAppName}/**`)
+    .pipe(tar(`${cliAppName}-v${version}.tar`))
     .pipe(gzip())
     .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('zip', () => {
+gulp.task('gzip:pro-cli', () => {
   return gulp
-    .src(`./dist/${appName}/**`)
-    .pipe(zip(`${appName}-v${version}.zip`))
+    .src(`./dist/${proCliAppName}/**`)
+    .pipe(tar(`${proCliAppName}-v${version}.tar`))
+    .pipe(gzip())
     .pipe(gulp.dest('./dist'));
 });
+
+gulp.task('gzip', gulp.series('gzip:cli', 'gzip:pro-cli'));
+
+gulp.task('zip:cli', () => {
+  return gulp
+    .src(`./dist/${cliAppName}/**`)
+    .pipe(zip(`${cliAppName}-v${version}.zip`))
+    .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('zip:pro-cli', () => {
+  return gulp
+    .src(`./dist/${proCliAppName}/**`)
+    .pipe(zip(`${proCliAppName}-v${version}.zip`))
+    .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('zip', gulp.series('zip:cli', 'zip:pro-cli'));

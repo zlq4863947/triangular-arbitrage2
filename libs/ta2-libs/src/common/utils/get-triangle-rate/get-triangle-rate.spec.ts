@@ -1,4 +1,5 @@
-import { Edge } from '../../../../app/models';
+import { Edge } from '@ta2-libs/models';
+
 import { getTriangleRate } from './get-triangle-rate';
 
 describe('getTriangleRate utils functions', () => {

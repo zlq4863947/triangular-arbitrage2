@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BinanceApiService } from '@ta2-libs/broker-api';
+import { DataService } from '@ta2-libs/modules';
 import { buildDeferInitService } from '@ta2-libs/testing';
 
-import { AppModule } from '../../app.module';
 import { Triangle } from '../../models';
-import { DataService } from '../../services';
 import { TradeService } from './trade.service';
 
 describe('TradeService', () => {
@@ -12,7 +11,7 @@ describe('TradeService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      // imports: [AppModule],
     }).compile();
 
     await buildDeferInitService(module.get(BinanceApiService));
