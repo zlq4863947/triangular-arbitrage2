@@ -1,0 +1,4 @@
+[submodule "apps/pro-cli-app"]
+	path = apps/pro-cli-app
+	url = https://github.com/zlq4863947/ta2-pro-cli-app.git
+	branch = main
