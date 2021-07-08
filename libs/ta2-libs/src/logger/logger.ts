@@ -1,10 +1,12 @@
 import { Inject, Injectable, Logger as NestLogger } from '@nestjs/common';
+import { LogCaller } from '@ta2-libs/common';
 
 import { LOG_STRATEGY, MIN_LOG_LEVEL, TAGS_EXCLUDE, TAGS_INCLUDE } from './common/tokens';
 import { LogLevels } from './common/types';
 import { isAllowedLogLevel } from './common/utils';
 import { LogStrategy } from './strategy/log-strategy';
 
+@LogCaller()
 @Injectable()
 export class Logger extends NestLogger {
   constructor(
@@ -56,6 +58,6 @@ export class Logger extends NestLogger {
         return; // skip
       }
     }
-    this.strategy.log(logLevel, tag, ...data);
+    this.strategy.log(logLevel, tags, ...data);
   }
 }

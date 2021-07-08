@@ -1,14 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { ENABLE_COLORS, LogLevels } from '../common';
+import { ENABLE_COLORS, LogLevels, getLogContent } from '../common';
 import { LogStrategy } from '../strategy';
-import { getLogContent } from './utils';
 
 @Injectable()
 export class ConsoleLogStrategy implements LogStrategy {
   constructor(@Inject(ENABLE_COLORS) private readonly enableColors: boolean) {}
-  log(logLevel: LogLevels, tag: string, ...data: unknown[]): void {
-    const logArgs = getLogContent(this.enableColors, logLevel, tag, ...data);
+  log(logLevel: LogLevels, tags: string[], ...data: unknown[]): void {
+    const logArgs = getLogContent(this.enableColors, logLevel, tags, ...data);
 
     switch (logLevel) {
       case LogLevels.Debug: {
