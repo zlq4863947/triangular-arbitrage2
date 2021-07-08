@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { CatchError } from '@ta2-libs/common';
+import { DefaultExceptionHandler } from '@ta2-libs/exceptions';
 import { Logger } from '@ta2-libs/logger';
 import { Triangle } from '@ta2-libs/models';
 import { DataService, EngineService, OnDestroyService, TradeService } from '@ta2-libs/modules';
@@ -8,6 +10,7 @@ import moment = require('moment');
 const AsciiTable = require('ascii-table');
 
 @Injectable()
+@CatchError(DefaultExceptionHandler)
 export class AppService extends OnDestroyService {
   private name = 'AppService';
 

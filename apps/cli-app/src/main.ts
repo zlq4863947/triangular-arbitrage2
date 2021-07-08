@@ -3,13 +3,21 @@ import { Logger } from '@ta2-libs/logger';
 
 import { AppModule, AppService } from './app';
 
-let appLogger: Logger | null = null;
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace NodeJS {
+    interface Global {
+      logger: Logger;
+    }
+  }
+}
+
 async function bootstrap() {
   try {
     const app = await NestFactory.createApplicationContext(AppModule);
     const logger = app.get(Logger);
     app.useLogger(logger);
-    appLogger = logger;
+    global.logger = logger;
 
     const appService = app.get(AppService);
     appService.start();
@@ -22,6 +30,6 @@ bootstrap();
 process.on('uncaughtException', async (err) => printError('uncaughtException', err));
 
 function printError(label: string, error: Error) {
-  const logger = appLogger ? appLogger : console;
+  const logger = global.logger ? global.logger : console;
   logger.error(label, error);
 }
