@@ -4,12 +4,14 @@ import { Logger, configure, getLogger } from 'log4js';
 import { ENABLE_COLORS, LogLevels, getLogContent } from '../common';
 import { LogStrategy } from './log-strategy';
 
-export enum LogCategory {
-  App = 'app',
-  Debug = 'debug',
-  Error = 'error',
-  Event = 'event',
-}
+export const LogCategory = {
+  App: 'app',
+  Debug: 'debug',
+  Error: 'error',
+  Event: 'event',
+} as const;
+
+export type LogCategory = typeof LogCategory[keyof typeof LogCategory];
 
 const defaultAppender = {
   type: 'multiFile',
