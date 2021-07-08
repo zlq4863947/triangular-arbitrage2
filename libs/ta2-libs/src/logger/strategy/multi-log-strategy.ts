@@ -1,9 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Logger, configure, getLogger } from 'log4js';
 
-import { ENABLE_COLORS, LogLevels } from '../common';
+import { ENABLE_COLORS, LogLevels, getLogContent } from '../common';
 import { LogStrategy } from './log-strategy';
-import { getLogContent } from './utils';
 
 export enum LogCategory {
   App = 'app',
@@ -14,7 +13,7 @@ export enum LogCategory {
 
 const defaultAppender = {
   type: 'multiFile',
-  pattern: '.yyyyMMdd-hh',
+  pattern: '.yyyyMMdd',
   maxLogSize: 1024 * 1024 * 50,
   backups: 300,
   compress: true,
@@ -46,9 +45,9 @@ export class MultiLogStrategy implements LogStrategy {
     this.loggerMap.set(LogCategory.Event, getLogger(LogCategory.Event));
   }
 
-  log(logLevel: LogLevels, tag: string, ...data: unknown[]): void {
-    const colorMessage = getLogContent(this.enableColors, logLevel, tag, ...data).join('');
-    const message = getLogContent(false, logLevel, tag, ...data).join('');
+  log(logLevel: LogLevels, tags: string[], ...data: unknown[]): void {
+    const colorMessage = getLogContent(this.enableColors, logLevel, tags, ...data).join('');
+    const message = getLogContent(false, logLevel, tags, ...data).join('');
     switch (logLevel) {
       case LogLevels.Warn:
       case LogLevels.Debug: {
