@@ -60,6 +60,12 @@ export const ExecutionType = {
 
 export type ExecutionType = typeof ExecutionType[keyof typeof ExecutionType];
 
+export interface UserBalance {
+  asset: string;
+  availableBalance: string;
+  onOrderBalance: string;
+}
+
 /**
  * 订单更新
  * https://binance-docs.github.io/apidocs/spot/cn/#payload-2
@@ -86,6 +92,7 @@ export interface UserData extends EventData {
   tradeTime: number; // 1530435177265,                      成交时间
   tradeId: number; // 18151                                 成交ID
   maker: boolean; // false                                  maker side
+  balances: UserBalance[];
 }
 
 export interface Tickers {

@@ -20,6 +20,8 @@ describe('BinanceRestClient', () => {
 
   it('fetchTradingFees', async () => {
     const res = await service.fetchTradingFees();
+    const asset = res['ETH/BUSD'];
+    expect(asset).toBeDefined();
     expect(Object.keys(res).length).toBeGreaterThan(0);
   });
 });

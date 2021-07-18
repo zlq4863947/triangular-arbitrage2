@@ -101,7 +101,7 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
       return;
     }
 
-    const feeA = this.dataService.pairFees[a.pair].maker;
+    const feeA = this.dataService.pairFees[a.pair].taker;
     const minAmountA = getEdgeOrderAmount(a, pairInfoA, feeA);
     this.logger.info(this.name, `${useAssetA}最小交易量: ${minAmountA}`);
 
@@ -112,12 +112,12 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
     }
 
     const tradeEdgeA = initTradeEdge(a, minAmountA, feeA);
-    const actualAmountA = getActualAmount(tradeEdgeA, feeA);
+    let actualAmountA = getActualAmount(tradeEdgeA, feeA);
     const precisionAmountB = pairInfoB.precision.amount;
 
-    const feeB = this.dataService.pairFees[b.pair].maker;
+    const feeB = this.dataService.pairFees[b.pair].taker;
 
-    const feeC = this.dataService.pairFees[c.pair].maker;
+    const feeC = this.dataService.pairFees[c.pair].taker;
     let amountB = floor(divide(actualAmountA, b.price), precisionAmountB).toNumber();
     if (feeB > 0) {
       this.logger.info(this.name, `B边手续费(${feeB}),重新计算A边订单数量。`);
@@ -127,6 +127,8 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
         b.side === 'sell' ? divide(expectFilledAmount, a.price) : expectFilledAmount,
         pairInfoA.precision.amount,
       ).toNumber();
+      actualAmountA = getActualAmount(tradeEdgeA, feeA);
+      amountB = floor(divide(actualAmountA, b.price), precisionAmountB).toNumber();
     }
     const tradeEdgeB = initTradeEdge(b, amountB, feeB);
     const actualAmountB = floor(getActualAmount(tradeEdgeB, feeB), precisionAmountB).toNumber();

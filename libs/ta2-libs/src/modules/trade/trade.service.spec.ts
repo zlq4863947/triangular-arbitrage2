@@ -3,6 +3,7 @@ import { BinanceApiService } from '@ta2-libs/broker-api';
 import { DataService } from '@ta2-libs/modules';
 import { buildDeferInitService } from '@ta2-libs/testing';
 
+import { AppModule } from '../../../../../apps/cli-app/src/app';
 import { Triangle } from '../../models';
 import { TradeService } from './trade.service';
 
@@ -11,7 +12,7 @@ describe('TradeService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      // imports: [AppModule],
+      imports: [AppModule],
     }).compile();
 
     await buildDeferInitService(module.get(BinanceApiService));
@@ -541,6 +542,73 @@ describe('TradeService', () => {
         cRate: 'c rate = (0.18223695 x 5.494 -1) x 100 = 0.12098174%',
       },
       time: 1625283670606,
+    };
+    const tradeTriangle = await service.getTradeTriangle(triangle);
+    expect(tradeTriangle).toEqual({
+      id: 'BUSD-BTC-BAND',
+      edges: [
+        {
+          pair: 'BTC/BUSD',
+          fromAsset: 'BUSD',
+          toAsset: 'BTC',
+          side: 'buy',
+          price: 33457.48,
+          quantity: 0.000985,
+          fee: 0,
+          id: 'BTCBUSD_1625337573207',
+          status: 'todo',
+        },
+        {
+          pair: 'BAND/BTC',
+          fromAsset: 'BTC',
+          toAsset: 'BAND',
+          side: 'buy',
+          price: 0.00016401,
+          quantity: 6,
+          fee: 0.001,
+          id: 'BANDBTC_1625337662958',
+          status: 'todo',
+        },
+        {
+          pair: 'BAND/BUSD',
+          fromAsset: 'BAND',
+          toAsset: 'BUSD',
+          side: 'sell',
+          price: 5.494,
+          quantity: 5.9,
+          fee: 0,
+          id: 'BANDBUSD_1625337672012',
+          status: 'todo',
+        },
+      ],
+      rate: '0.12098174',
+      logs: {
+        aRate: 'a rate = 1 / 33457.48 = 0.00002988 BTC',
+        bRate: 'b rate = 0.00002988 / 0.00016401 = 0.18223695 BAND',
+        cRate: 'c rate = (0.18223695 x 5.494 -1) x 100 = 0.12098174%',
+      },
+      time: 1625283670606,
+      openTime: 0,
+      status: 'todo',
+    });
+    done();
+  });
+
+  it('getTradeTriangle #10', async (done) => {
+    const triangle: Triangle = {
+      id: 'BUSD-ETH-BNB',
+      edges: [
+        { pair: 'ETH/BUSD', fromAsset: 'BUSD', toAsset: 'ETH', side: 'buy', price: 1978.33, quantity: 1.9686 },
+        { pair: 'BNB/ETH', fromAsset: 'ETH', toAsset: 'BNB', side: 'buy', price: 0.15442, quantity: 0.452 },
+        { pair: 'BNB/BUSD', fromAsset: 'BNB', toAsset: 'BUSD', side: 'sell', price: 305.51, quantity: 0.0328 },
+      ],
+      rate: '0.00532953',
+      logs: {
+        aRate: 'a rate = 1 / 1978.33 = 0.00050547 ETH',
+        bRate: 'b rate = 0.00050547 / 0.15442 = 0.00327338 BNB',
+        cRate: 'c rate = (0.00327338 x 305.51 -1) x 100 = 0.00532953%',
+      },
+      time: 1626580635179,
     };
     const tradeTriangle = await service.getTradeTriangle(triangle);
     expect(tradeTriangle).toEqual({

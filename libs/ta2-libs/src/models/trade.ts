@@ -11,6 +11,18 @@ export const TradeStatus = {
 export type TradeStatus = typeof TradeStatus[keyof typeof TradeStatus];
 
 /**
+ * 用户资产信息
+ */
+export interface UserAsset {
+  // 资产名称
+  asset: string;
+  // 可用余额
+  free: string;
+  // 冻结余额
+  locked: string;
+}
+
+/**
  * 三角组合的边
  */
 export interface Edge {

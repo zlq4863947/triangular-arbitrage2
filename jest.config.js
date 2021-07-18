@@ -4,7 +4,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   moduleNameMapper: {
     '^apps/(.*)$': '<rootDir>/apps/$1',
-    '^@ta2-libs/(.*)': '<rootDir>/libs/ta2-libs/$1',
+    '^@ta2-libs/(.*)': '<rootDir>/libs/ta2-libs/src/$1',
   },
   testMatch: ['<rootDir>/(apps|libs)/**/*.spec.ts'],
   transform: {
