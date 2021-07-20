@@ -9,6 +9,7 @@
     "url": "https://github.com/zlq4863947/triangular-arbitrage2.git"
   },
   "scripts": {
+    "deploy:all": "yarn deploy && gulp zip && gulp gzip",
     "deploy:linux": "yarn deploy && gulp gzip",
     "deploy:windows": "yarn deploy && gulp zip",
     "deploy": "yarn prebuild && yarn build && yarn bundle",
