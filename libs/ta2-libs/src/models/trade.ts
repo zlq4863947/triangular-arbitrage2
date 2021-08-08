@@ -82,13 +82,3 @@ export interface TriangleRateLogs {
   bRate: string;
   cRate: string;
 }
-
-/**
- * timestamp
- * eg: 1535600337261
- */
-export type Timestamp = Nominal<number, 'Timestamp'>;
-
-export type Nominal<T, Name extends string> = T & {
-  [Symbol.species]: Name;
-};
