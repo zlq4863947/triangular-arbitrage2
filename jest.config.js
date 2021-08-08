@@ -6,6 +6,7 @@ module.exports = {
     '^apps/(.*)$': '<rootDir>/apps/$1',
     '^@ta2-libs/(.*)': '<rootDir>/libs/ta2-libs/src/$1',
   },
+  modulePathIgnorePatterns: ['<rootDir>/dist'],
   testMatch: ['<rootDir>/(apps|libs)/**/*.spec.ts'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
