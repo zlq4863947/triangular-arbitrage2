@@ -10,18 +10,6 @@ processingOrderPatrolTime = 60
 sessionLimit = 1
 
 ###
-### [mysql]
-### mysql
-###
-[mysql]
-  host = "127.0.0.1"
-  port = 3306
-  username = "root"
-  password = "qwer1234"
-  database = "ta_db"
-  logging = true
-
-###
 ### [broker]
 ### 交易所相关配置
 ###
