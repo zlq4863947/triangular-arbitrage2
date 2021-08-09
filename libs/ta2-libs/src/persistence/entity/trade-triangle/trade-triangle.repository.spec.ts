@@ -5,12 +5,12 @@ import { EntityTestBed } from '../../common/testing/entity-test-bed';
 import { TradeTriangleEntityParam, TradeTriangleRepository } from './trade-triangle.repository';
 
 describe('trade-triangle.repository', () => {
-  let reposity: TradeTriangleRepository;
+  let repository: TradeTriangleRepository;
   const defaultData = mockTradeTriangleEntityParam;
 
   beforeAll(async () => {
     await EntityTestBed.setup();
-    reposity = EntityTestBed.getRepository(TradeTriangleRepository);
+    repository = EntityTestBed.getRepository(TradeTriangleRepository);
   });
 
   afterAll(async () => {
@@ -19,18 +19,18 @@ describe('trade-triangle.repository', () => {
 
   beforeEach(async () => {
     await EntityTestBed.reset();
-    await reposity.insertTradeTriangle(defaultData);
+    await repository.insertTradeTriangle(defaultData);
   });
 
   describe('insertTradeTriangle', () => {
-    it('should insert new candlestick', async () => {
+    it('should insert new trade triangle', async () => {
       const newData = {
         ...defaultData,
         id: 'insert-data',
         rate: '0.8',
       };
-      await reposity.insertTradeTriangle(newData);
-      const insertedData = await reposity.find({
+      await repository.insertTradeTriangle(newData);
+      const insertedData = await repository.find({
         id: newData.id,
       });
       expect(insertedData.map(getDataFromEntity)).toEqual([newData]);
@@ -43,16 +43,16 @@ describe('trade-triangle.repository', () => {
       rate: '0.8',
     };
     it('should update TradeTriangle', async () => {
-      const res = await reposity.updateTradeTriangle(updData);
+      const res = await repository.updateTradeTriangle(updData);
       expect(res.affected).toEqual(1);
-      const updatedData = await reposity.find();
+      const updatedData = await repository.find();
       expect(updatedData.map(getDataFromEntity)).toEqual([updData]);
     });
   });
 
   describe('getTradeTriangles', () => {
     it('should get getTradeTriangles', async () => {
-      const res = await reposity.getTradeTriangles(defaultData.id);
+      const res = await repository.getTradeTriangles(defaultData.id);
       expect([getDataFromEntity(res[0])]).toEqual([defaultData]);
     });
   });

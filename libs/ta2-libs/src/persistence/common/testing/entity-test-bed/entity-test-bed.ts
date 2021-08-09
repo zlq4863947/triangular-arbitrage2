@@ -1,12 +1,11 @@
 import * as assert from 'assert';
 
 import { gt, lte } from '@ta2-libs/common/big-number';
-import { Config } from '@ta2-libs/config';
 import { isFunction, isObject } from 'lodash';
 import { Connection, EntityManager, ObjectType, getConnectionManager } from 'typeorm';
-import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
-import { allEntityTypes } from './constants';
+import { allEntityTypes } from '../../constants';
+import { getConnectionOptions } from '../../get-connection-options';
 
 /**
  * `class` of entity.
@@ -326,12 +325,7 @@ export class EntityTestBed {
   async _setup(): Promise<void> {
     const connectionManager = getConnectionManager();
     this.databaseConnection =
-      connectionManager.connections.length > 0
-        ? connectionManager.connections[0]
-        : connectionManager.create({
-            ...Config.connectionOptions,
-            entities: allEntityTypes,
-          } as MysqlConnectionOptions);
+      connectionManager.connections.length > 0 ? connectionManager.connections[0] : connectionManager.create(getConnectionOptions());
 
     await this._reset();
   }

@@ -12,6 +12,7 @@ export function getFloorByDigitsTransformer(digit: number): StringTransformer {
       if (value === undefined || value === null) {
         return value;
       }
+      console.log('1111:', value);
 
       const [integer, fraction] = value.split('.');
       if (fraction === undefined) {
