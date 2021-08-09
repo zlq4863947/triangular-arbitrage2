@@ -1,15 +1,16 @@
-import { getCandlestickDefaultData } from '../../common/testing/data/models';
-import { EntityTestBed } from '../../common/testing/entity-test-bed';
+import { TradeTriangleEntity } from '@ta2-libs/persistence';
+import { mockTradeTriangleEntityParam } from '@ta2-libs/persistence/common/testing';
 
-describe('candlestick.repository', () => {
-  let candlestickReposity: CandlestickRepository;
-  const defaultData = getCandlestickDefaultData();
-  const exchange = 'bitmex';
-  const pair = 'xbtusd';
+import { EntityTestBed } from '../../common/testing/entity-test-bed';
+import { TradeTriangleEntityParam, TradeTriangleRepository } from './trade-triangle.repository';
+
+describe('trade-triangle.repository', () => {
+  let reposity: TradeTriangleRepository;
+  const defaultData = mockTradeTriangleEntityParam;
 
   beforeAll(async () => {
     await EntityTestBed.setup();
-    candlestickReposity = EntityTestBed.getRepository(CandlestickRepository);
+    reposity = EntityTestBed.getRepository(TradeTriangleRepository);
   });
 
   afterAll(async () => {
@@ -18,49 +19,52 @@ describe('candlestick.repository', () => {
 
   beforeEach(async () => {
     await EntityTestBed.reset();
-    await candlestickReposity.insertNewCandlesticks(defaultData);
+    await reposity.insertTradeTriangle(defaultData);
   });
 
-  describe('insertNewCandlestick', () => {
+  describe('insertTradeTriangle', () => {
     it('should insert new candlestick', async () => {
       const newData = {
-        ...defaultData[0],
-        exchange: 'bitbank',
-        time: Date.now() as Timestamp,
+        ...defaultData,
+        id: 'insert-data',
+        rate: '0.8',
       };
-      await candlestickReposity.insertNewCandlestick(newData);
-      const insertedCandlestick = await candlestickReposity.find({
-        exchange: newData.exchange,
+      await reposity.insertTradeTriangle(newData);
+      const insertedData = await reposity.find({
+        id: newData.id,
       });
-      expect(insertedCandlestick.map(getDataFromEntity)).toEqual([newData]);
+      expect(insertedData.map(getDataFromEntity)).toEqual([newData]);
     });
   });
 
-  describe('insertNewCandlesticks', () => {
-    it('should insert new Candlesticks', async () => {
-      const insertedCandlesticks = await candlestickReposity.find();
-      expect(insertedCandlesticks.map(getDataFromEntity)).toEqual(defaultData);
+  describe('updateTradeTriangle', () => {
+    const updData = {
+      ...defaultData,
+      rate: '0.8',
+    };
+    it('should update TradeTriangle', async () => {
+      const res = await reposity.updateTradeTriangle(updData);
+      expect(res.affected).toEqual(1);
+      const updatedData = await reposity.find();
+      expect(updatedData.map(getDataFromEntity)).toEqual([updData]);
     });
   });
 
-  describe('getCandlesticks', () => {
-    it('should get candlesticks', async () => {
-      const res = await candlestickReposity.getCandlesticks(exchange, pair);
-      expect([getDataFromEntity(res[0])]).toEqual(defaultData);
+  describe('getTradeTriangles', () => {
+    it('should get getTradeTriangles', async () => {
+      const res = await reposity.getTradeTriangles(defaultData.id);
+      expect([getDataFromEntity(res[0])]).toEqual([defaultData]);
     });
   });
 });
 
-function getDataFromEntity(entity: CandlestickEntity): CandlestickEntityCreateParams {
+function getDataFromEntity(entity: TradeTriangleEntity): TradeTriangleEntityParam {
   return {
-    exchange: entity.exchange,
-    symbol: entity.symbol,
-    period: entity.period,
-    time: entity.time,
-    open: fixByDigits(entity.open, 0),
-    high: fixByDigits(entity.high, 0),
-    low: fixByDigits(entity.low, 0),
-    close: fixByDigits(entity.close, 0),
-    volume: fixByDigits(entity.volume, 0),
+    id: entity.id,
+    edge1Id: entity.edge1Id,
+    edge2Id: entity.edge2Id,
+    edge3Id: entity.edge3Id,
+    rate: entity.rate,
+    status: entity.status,
   };
 }

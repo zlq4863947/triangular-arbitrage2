@@ -7,7 +7,7 @@ export type TradeTriangleEntityParam = Omit<TradeTriangleEntity, 'createdAt' | '
 @EntityRepository(TradeTriangleEntity)
 export class TradeTriangleRepository extends Repository<TradeTriangleEntity> {
   async insertTradeTriangle(param: TradeTriangleEntityParam): Promise<InsertResult> {
-    return this.insert(param);
+    return this.insert({ ...param });
   }
 
   async updateTradeTriangle(param: TradeTriangleEntityParam): Promise<UpdateResult> {
@@ -15,7 +15,7 @@ export class TradeTriangleRepository extends Repository<TradeTriangleEntity> {
   }
 
   async insertTradeTriangles(params: TradeTriangleEntityParam[]): Promise<TradeTriangleEntity[]> {
-    return this.save(params as TradeTriangleEntity[], { reload: false });
+    return this.save({ ...params } as TradeTriangleEntity[], { reload: false });
   }
 
   async getTradeTriangles(id: string): Promise<TradeTriangleEntity[]> {
