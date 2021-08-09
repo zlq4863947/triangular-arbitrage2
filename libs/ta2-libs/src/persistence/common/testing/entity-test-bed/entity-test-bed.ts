@@ -1,8 +1,10 @@
 import * as assert from 'assert';
 
 import { gt, lte } from '@ta2-libs/common/big-number';
+import { Config } from '@ta2-libs/config';
 import { isFunction, isObject } from 'lodash';
-import { Connection, EntityManager, ObjectType, createConnection, getConnectionManager } from 'typeorm';
+import { Connection, EntityManager, ObjectType, getConnectionManager } from 'typeorm';
+import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
 import { allEntityTypes } from './constants';
 
@@ -323,7 +325,13 @@ export class EntityTestBed {
    */
   async _setup(): Promise<void> {
     const connectionManager = getConnectionManager();
-    this.databaseConnection = connectionManager.connections.length > 0 ? connectionManager.connections[0] : await createConnection();
+    this.databaseConnection =
+      connectionManager.connections.length > 0
+        ? connectionManager.connections[0]
+        : connectionManager.create({
+            ...Config.connectionOptions,
+            entities: allEntityTypes,
+          } as MysqlConnectionOptions);
 
     await this._reset();
   }
@@ -462,7 +470,9 @@ export class EntityTestBed {
     /**
      * TypeORM can be frozen by using same connection for a long time so we manually handle reconnect.
      */
-    await this.databaseConnection.close();
+    if (this.databaseConnection.isConnected) {
+      await this.databaseConnection.close();
+    }
     await this.databaseConnection.connect();
 
     await this._clear();

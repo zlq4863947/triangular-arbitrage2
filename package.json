@@ -16,6 +16,7 @@
     "bundle": "gulp bundle",
     "build": "gulp build",
     "prebuild": "rimraf dist && gulp minify",
+    "db:sync": "yarn build && yarn _schema:sync",
     "format": "yarn format:ts:import && yarn format:ts",
     "format:ts": "prettier --config .prettierrc --write \"{apps,libs,tools}/**/*.ts\"",
     "format:ts:import": "import-sort --write \"{apps,libs}/**/*.ts\"",
@@ -27,7 +28,8 @@
     "test": "cross-env NODE_ENV=test yarn jest -- --runInBand",
     "test:cov": "yarn jest -- --coverage",
     "test:debug": "cross-env NODE_ENV=test node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config apps/cli-app/test/jest-e2e.json"
+    "test:e2e": "jest --config apps/cli-app/test/jest-e2e.json",
+    "_schema:sync": "yarn ts-node $(npm bin)/typeorm schema:sync"
   },
   "dependencies": {
     "@nestjs/common": "^7.6.15",
@@ -44,6 +46,7 @@
     "lodash": "^4.17.21",
     "log4js": "^6.3.0",
     "moment": "^2.29.1",
+    "mysql2": "^2.3.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.6",

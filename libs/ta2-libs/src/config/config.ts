@@ -1,3 +1,6 @@
+import { ConnectionOptions } from 'typeorm';
+import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+
 export interface ConfigSettings {
   active: 'binance';
   orderTimes: number;
@@ -7,6 +10,8 @@ export interface ConfigSettings {
     [broker: string]: ConfigBroker;
   };
   pro: ConfigPro;
+  mysql: ConfigMysql;
+  connectionOptions: MysqlConnectionOptions;
 }
 
 export interface ConfigPro {
@@ -28,6 +33,15 @@ export interface ConfigAPIKey {
   secret: string;
 }
 
+export interface ConfigMysql {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+  database: string;
+  logging: boolean;
+}
+
 // tslint:disable-next-line:no-var-requires
 const root: ConfigSettings = require('config');
 const activeBroker = root.broker[root.active];
@@ -39,6 +53,16 @@ const Config = {
   activeBroker,
   credential,
   pro,
+  connectionOptions: {
+    ...root.mysql,
+    type: 'mysql',
+    name: 'default',
+    dropSchema: false,
+    synchronize: false,
+    migrationsRun: false,
+    supportBigNumbers: true,
+    bigNumberStrings: true,
+  },
 };
 
 export { Config };

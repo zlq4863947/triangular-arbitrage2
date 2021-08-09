@@ -1,5 +1,5 @@
 import { Edge, TriangleRate, TriangleRateLogs } from '../../../models';
-import { divide, floor, floorToString, getBigNumber, multiple, subtract } from '../big-number';
+import { divide, floor, floorToString, getBigNumber, multiple, subtract } from '../../big-number';
 
 /**
  * 通过三边信息，获取合成交叉汇率

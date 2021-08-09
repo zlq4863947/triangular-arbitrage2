@@ -2,7 +2,7 @@ import { Config } from '@ta2-libs/config';
 import { Market } from 'ccxt';
 
 import { Edge } from '../../../models';
-import { add, divide, floor, multiple } from '../big-number';
+import { add, divide, floor, multiple } from '../../big-number';
 
 /**
  * 获取单边下单数量
