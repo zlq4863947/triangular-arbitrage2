@@ -37,10 +37,10 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
   }
 
   onModuleInit(): void {
-    this.strategy.getResult$().subscribe((triangle) => {
-      const session = this.sessionMap.get(triangle.id);
+    this.strategy.getResult$().subscribe((triangleId: string) => {
+      const session = this.sessionMap.get(triangleId);
       if (session) {
-        this.sessionMap.delete(triangle.id);
+        this.sessionMap.delete(triangleId);
       }
     });
   }
