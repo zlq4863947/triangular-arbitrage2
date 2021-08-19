@@ -1,7 +1,7 @@
 import { TradeStatus } from '@ta2-libs/models';
 import { EntityRepository, InsertResult, Repository, UpdateResult } from 'typeorm';
 
-import { TradeEdgeEntity } from './trade-Edge.entity';
+import { TradeEdgeEntity } from './trade-edge.entity';
 
 export type TradeEdgeEntityParam = Omit<TradeEdgeEntity, 'createdAt' | 'updatedAt'>;
 
@@ -11,16 +11,16 @@ export class TradeEdgeRepository extends Repository<TradeEdgeEntity> {
     return this.insert({ ...param });
   }
 
-  updateTradeEdge(param: TradeEdgeEntityParam): Promise<UpdateResult> {
+  updateTradeEdge(param: Partial<TradeEdgeEntityParam>): Promise<UpdateResult> {
     return this.update(param.id, param);
   }
 
   insertTradeEdges(params: TradeEdgeEntityParam[]): Promise<TradeEdgeEntity[]> {
-    return this.save({ ...params } as TradeEdgeEntity[], { reload: false });
+    return this.save([...params] as TradeEdgeEntity[], { reload: false });
   }
 
-  getTradeEdges(id: string): Promise<TradeEdgeEntity[]> {
-    return this.find({ where: { id } });
+  getTradeEdge(id: string): Promise<TradeEdgeEntity | undefined> {
+    return this.findOne({ where: { id } });
   }
 
   getActiveTradeEdges(): Promise<TradeEdgeEntity[]> {

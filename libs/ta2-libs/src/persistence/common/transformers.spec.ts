@@ -10,6 +10,8 @@ describe('transformers', () => {
     const transformer = getFloorByDigitsTransformer(4);
     expect(transformer.from(null)).toEqual(null);
     expect(transformer.to(null)).toEqual(null);
+    expect(transformer.to('43454.0001800')).toEqual('43454.0001');
+    expect(transformer.to('43454.0010800')).toEqual('43454.001');
     expect(transformer.to('0.00015')).toEqual('0.0001');
     expect(transformer.to('1')).toEqual('1');
   });

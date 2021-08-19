@@ -17,6 +17,14 @@ export class TradeEdgeEntity {
 
   @Column({
     type: 'varchar',
+    name: 'triangle_id',
+    length: 30,
+    comment: 'triangle id (BUSD-ETH-UFT_1626796988971)',
+  })
+  readonly triangleId!: string;
+
+  @Column({
+    type: 'varchar',
     name: 'pair',
     length: 10,
     comment: 'pair',

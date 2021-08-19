@@ -13,6 +13,7 @@ export const mockTradeTriangleEntityParam: TradeTriangleEntityParam = {
 
 export const mockTradeEdgeEntityParam: TradeEdgeEntityParam = {
   id: 'BUSD-ETH_1626796988971',
+  triangleId: 'BUSD-ETH-UFT_1626796988971',
   status: TradeStatus.Todo,
   pair: 'BTC/BUSD',
   fromAsset: 'BUSD',

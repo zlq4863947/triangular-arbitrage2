@@ -13,7 +13,7 @@ export class Strategy {
     return this.tradingStrategy.execute(triangle);
   }
 
-  getResult$(): Observable<TradeTriangle> {
+  getResult$(): Observable<string> {
     return this.tradingStrategy.getResult$();
   }
 }

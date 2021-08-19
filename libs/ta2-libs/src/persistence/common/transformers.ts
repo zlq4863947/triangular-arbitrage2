@@ -1,4 +1,4 @@
-type StringTransformerFunction = (value?: string | null | undefined) => string | null | undefined;
+type StringTransformerFunction = (value?: string | number | null | undefined) => string | number | null | undefined;
 
 interface StringTransformer {
   from: StringTransformerFunction;
@@ -6,15 +6,14 @@ interface StringTransformer {
 }
 
 export function getFloorByDigitsTransformer(digit: number): StringTransformer {
-  return {
-    from: (value?: string | null | undefined) => value,
-    to: (value?: string | null | undefined) => {
+  return <StringTransformer>{
+    from: (value?: string | number | null | undefined) => value,
+    to: (value?: string | number | null | undefined) => {
       if (value === undefined || value === null) {
         return value;
       }
-      console.log('1111:', value);
 
-      const [integer, fraction] = value.split('.');
+      const [integer, fraction] = `${value}`.split('.');
       if (fraction === undefined) {
         return value;
       }

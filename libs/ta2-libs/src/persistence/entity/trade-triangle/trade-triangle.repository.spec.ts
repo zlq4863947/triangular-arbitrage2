@@ -51,9 +51,20 @@ describe('trade-triangle.repository', () => {
   });
 
   describe('getTradeTriangles', () => {
-    it('should get getTradeTriangles', async () => {
+    it('should get tradeTriangles', async () => {
       const res = await repository.getTradeTriangles(defaultData.id);
       expect([getDataFromEntity(res[0])]).toEqual([defaultData]);
+    });
+  });
+
+  describe('getTradeTriangleByEdgeId', () => {
+    it('should get tradeTriangleByEdgeId', async () => {
+      const res = await repository.getTradeTriangleByEdgeId(defaultData.edge1Id);
+      expect(getDataFromEntity(res)).toEqual(defaultData);
+      const res2 = await repository.getTradeTriangleByEdgeId(defaultData.edge2Id);
+      expect(getDataFromEntity(res2)).toEqual(defaultData);
+      const res3 = await repository.getTradeTriangleByEdgeId(defaultData.edge3Id);
+      expect(getDataFromEntity(res3)).toEqual(defaultData);
     });
   });
 });

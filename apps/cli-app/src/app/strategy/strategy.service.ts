@@ -19,7 +19,7 @@ export class StrategyService implements TradingStrategy {
     this.logger.info(this.name, `套利交易信息:${JSON.stringify(triangle)}`);
   }
 
-  getResult$(): Observable<TradeTriangle> {
+  getResult$(): Observable<string> {
     return EMPTY;
   }
 }

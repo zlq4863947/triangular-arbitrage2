@@ -36,10 +36,62 @@ describe('trade-edge.repository', () => {
     });
   });
 
+  describe('insertTradeEdges', () => {
+    it('should insert new trade edges', async () => {
+      const newData = {
+        ...defaultData,
+        id: 'insert-data',
+      };
+      const res = await repository.insertTradeEdges([
+        {
+          pair: 'BTC/BUSD',
+          fromAsset: 'BUSD',
+          toAsset: 'BTC',
+          side: 'buy',
+          price: 45069.77,
+          quantity: 0.002021,
+          fee: 0.001,
+          id: 'BTCBUSD_1629314958989',
+          status: 'todo',
+          triangleId: 'BUSD-BTC-ETH_1629314958990',
+        },
+        {
+          pair: 'ETH/BTC',
+          fromAsset: 'BTC',
+          toAsset: 'ETH',
+          side: 'buy',
+          price: 0.067361,
+          quantity: 0.029,
+          fee: 0.001,
+          id: 'ETHBTC_1629314958990',
+          status: 'todo',
+          triangleId: 'BUSD-BTC-ETH_1629314958990',
+        },
+        {
+          pair: 'ETH/BUSD',
+          fromAsset: 'ETH',
+          toAsset: 'BUSD',
+          side: 'sell',
+          price: 3036.41,
+          quantity: 0.028,
+          fee: 0.001,
+          id: 'ETHBUSD_1629314958990',
+          status: 'todo',
+          triangleId: 'BUSD-BTC-ETH_1629314958990',
+        },
+      ]);
+      console.log(res);
+      const insertedData = await repository.find({
+        id: newData.id,
+      });
+      expect(insertedData.map(getDataFromEntity)).toEqual([newData]);
+    });
+  });
+
   describe('updateTradeEdge', () => {
     const updData = {
       ...defaultData,
-      rate: '0.8',
+      fee: 0.8,
     };
     it('should update TradeEdge', async () => {
       const res = await repository.updateTradeEdge(updData);
@@ -49,10 +101,10 @@ describe('trade-edge.repository', () => {
     });
   });
 
-  describe('getTradeEdges', () => {
-    it('should get getTradeEdges', async () => {
-      const res = await repository.getTradeEdges(defaultData.id);
-      expect([getDataFromEntity(res[0])]).toEqual([defaultData]);
+  describe('getTradeEdge', () => {
+    it('should get TradeEdge', async () => {
+      const res = await repository.getTradeEdge(defaultData.id);
+      expect(getDataFromEntity(res)).toEqual(defaultData);
     });
   });
 });
@@ -60,13 +112,14 @@ describe('trade-edge.repository', () => {
 function getDataFromEntity(entity: TradeEdgeEntity): TradeEdgeEntityParam {
   return {
     id: entity.id,
+    triangleId: entity.triangleId,
     pair: entity.pair,
     fromAsset: entity.fromAsset,
     toAsset: entity.toAsset,
     status: entity.status,
     side: entity.side,
-    price: entity.price,
-    quantity: entity.quantity,
-    fee: entity.fee,
+    price: +entity.price,
+    quantity: +entity.quantity,
+    fee: +entity.fee,
   };
 }

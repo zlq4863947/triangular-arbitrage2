@@ -4,7 +4,7 @@ import { TradeTriangle } from '../trade';
 
 export interface TradingStrategy {
   execute(triangle: TradeTriangle): Promise<void>;
-  getResult$(): Observable<TradeTriangle>;
+  getResult$(): Observable<string>;
 }
 
 export class NoopTradingStrategy implements TradingStrategy {
@@ -12,7 +12,7 @@ export class NoopTradingStrategy implements TradingStrategy {
     return;
   }
 
-  getResult$(): Observable<TradeTriangle> {
+  getResult$(): Observable<string> {
     return;
   }
 }
