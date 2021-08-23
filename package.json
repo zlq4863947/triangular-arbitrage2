@@ -17,6 +17,8 @@
     "build": "gulp build",
     "prebuild": "rimraf dist && gulp minify",
     "db:sync": "yarn build && yarn _schema:sync",
+    "docker:up": "docker-compose -f ./docker-compose.yml up -d",
+    "docker:down": "docker-compose -f ./docker-compose.yml down",
     "format": "yarn format:ts:import && yarn format:ts",
     "format:ts": "prettier --config .prettierrc --write \"{apps,libs,tools}/**/*.ts\"",
     "format:ts:import": "import-sort --write \"{apps,libs}/**/*.ts\"",
