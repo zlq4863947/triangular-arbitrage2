@@ -14,11 +14,11 @@ export class DataService implements OnModuleInit {
   private rest = this.binanceApi.rest;
   private websocket = this.binanceApi.ws;
   private tickers$ = new Subject<Tickers>();
-  private userData$ = new Subject<UserData>();
   private userAssets$ = new Subject<UserAsset[]>();
   private _assetMarkets: AssetMarkets;
   private _pairFees: PairFees;
 
+  userData$ = new Subject<UserData>();
   customFilled$ = new Subject<Order>();
   tickers: Tickers;
   userAssets: UserAsset[] = [];
