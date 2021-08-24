@@ -7,6 +7,8 @@
 - 技术库: [rxjs](https://github.com/ReactiveX/rxjs) 、[nestjs](https://github.com/nestjs/nest)
 - 数字货币相关库: [ccxt](https://github.com/ccxt/ccxt) 、[binance](https://github.com/tiagosiebler/binance)
 - 测试库: [jest](https://github.com/facebook/jest)
+- 虚拟环境容器: docker
+- 数据库: mysql 8.0
 - 依赖管理工具: [yarn](https://github.com/yarnpkg/yarn) （不是npm）
 
 ## 免责声明
