@@ -89,7 +89,7 @@ export class EngineService {
       tap((candidate) =>
         this.logger.info(
           this.name,
-          `查找可交易套利组合，最佳套利组合：预期交叉汇率(${floorToString(candidate.rate, 4)}%), 配置套利收益率(${
+          `查找可交易套利组合，最佳套利组合[${candidate.id}]：预期交叉汇率(${floorToString(candidate.rate, 4)}%), 配置套利收益率(${
             Config.activeBroker.profitRate
           }%)...`,
         ),

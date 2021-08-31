@@ -47,9 +47,10 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
 
   async start(bestCandidate: Triangle, tickers: Tickers): Promise<void> {
     if (this.sessionMap.size >= Config.root.sessionLimit) {
+      this.logger.info(this.name, `[${bestCandidate.id}]进行中的套利交易数 >= 最大同时交易会话数，不进行套利!!`);
       return;
     }
-    this.logger.info(this.name, `sessionMap:`, JSON.stringify([...this.sessionMap]));
+    this.logger.info(this.name, `进行中的套利交易会话:`, JSON.stringify([...this.sessionMap]));
     if (this.sessionMap.has(bestCandidate.id)) {
       this.logger.info(this.name, `正在执行相同套利:${bestCandidate.id}...`);
       return;
