@@ -1,5 +1,8 @@
 # triangular-arbitrage2
+
 `triangular-arbitrage2` 是开源的自动化三角套利交易程序。
+
+<a href="README_EN.md">see the English</a>
 
 ## 技术架构
 
@@ -46,6 +49,10 @@
 ### BTC
 
 `1J3hX6en3147VtEJvS2WbFrJ1emNcfcTdz`
+
+### ETH
+  
+`0x8bb4a5f034B4822E0D1B51f4E07ce1eee7Bc8D8C`
   
 
 ## License: GPL3
