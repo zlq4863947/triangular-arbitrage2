@@ -3,6 +3,8 @@
 
 `triangular-arbitrage2` Is an open source automated triangular arbitrage trading program。
 
+The previous version of the program: https://github.com/zlq4863947/triangular-arbitrage
+
 <a href="README.md">查看中文</a>
 
 ## Technology Architecture
