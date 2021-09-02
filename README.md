@@ -2,6 +2,8 @@
 
 `triangular-arbitrage2` 是开源的自动化三角套利交易程序。
 
+前一版本程序地址: https://github.com/zlq4863947/triangular-arbitrage
+
 <a href="README_EN.md">see the English</a>
 
 ## 技术架构
