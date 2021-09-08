@@ -1,3 +1,8 @@
+<a href="https://github.com/zlq4863947/triangular-arbitrage2" target="blank">
+  <p align="center">
+    <img src="assets/images/logo.svg" width="180" alt="triangular-arbitrage2 Logo" />
+  </p>
+</a>
 
 # triangular-arbitrage2
 
