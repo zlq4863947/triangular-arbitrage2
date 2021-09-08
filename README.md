@@ -1,14 +1,13 @@
+# triangular-arbitrage2
+
 <a href="https://github.com/zlq4863947/triangular-arbitrage2" target="blank">
   <p align="center">
     <img src="assets/images/logo.svg" width="180" alt="triangular-arbitrage2 Logo" />
   </p>
 </a>
 
-# triangular-arbitrage2
-
-`triangular-arbitrage2` 是开源的自动化三角套利交易程序。
-
-前一版本程序地址: https://github.com/zlq4863947/triangular-arbitrage
+<p align="center"> 开源的自动化三角套利交易程序。</p>
+<p align="center"> 前一版本程序地址: https://github.com/zlq4863947/triangular-arbitrage</p>
 
 <a href="README_EN.md">see the English</a>
 

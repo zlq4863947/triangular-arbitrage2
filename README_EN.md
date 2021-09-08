@@ -1,14 +1,13 @@
+# triangular-arbitrage2
+
 <a href="https://github.com/zlq4863947/triangular-arbitrage2" target="blank">
   <p align="center">
     <img src="assets/images/logo.svg" width="180" alt="triangular-arbitrage2 Logo" />
   </p>
 </a>
 
-# triangular-arbitrage2
-
-`triangular-arbitrage2` Is an open source automated triangular arbitrage trading program。
-
-The previous version of the program: https://github.com/zlq4863947/triangular-arbitrage
+<p align="center"> an open source automated triangular arbitrage trading program。</p>
+<p align="center"> The previous version of the program: https://github.com/zlq4863947/triangular-arbitrage</p>
 
 <a href="README.md">查看中文</a>
 
