@@ -1,3 +1,9 @@
+<a href="https://github.com/zlq4863947/triangular-arbitrage2" target="blank">
+  <p align="center">
+    <img src="assets/images/logo.svg" width="320" alt="triangular-arbitrage2 Logo" />
+  </p>
+</a>
+
 # triangular-arbitrage2
 
 `triangular-arbitrage2` 是开源的自动化三角套利交易程序。
