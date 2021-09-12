@@ -62,7 +62,11 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
     if (!tradeTriangle) {
       return;
     }
-    this.sessionMap.set(tradeTriangle.id, tradeTriangle);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (global.pro) {
+      this.sessionMap.set(tradeTriangle.id, tradeTriangle);
+    }
     await this.strategy.execute(tradeTriangle);
   }
 
@@ -84,8 +88,6 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
       this.logger.warn(this.name, `未查找到持有资产!!`);
       return;
     }
-
-    this.logger.info(this.name, triangle.rate);
     const [a, b, c] = triangle.edges;
 
     // 使用货币
@@ -135,6 +137,12 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
     const actualAmountB = floor(getActualAmount(tradeEdgeB, feeB), precisionAmountB).toNumber();
 
     const tradeEdgeC = initTradeEdge(c, actualAmountB, feeC);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (!global.pro) {
+      this.logger.info(this.name, `模拟套利成功，测算利率:${floorToString(triangle.rate, 4)}%`);
+    }
 
     return {
       ...triangle,

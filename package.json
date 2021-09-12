@@ -1,6 +1,6 @@
 {
   "name": "triangular-arbitrage2",
-  "version": "1.0",
+  "version": "0.1.0",
   "description": "a server side application for perform triangular arbitrage.",
   "author": "zlq4863947@gmail.com",
   "license": "GPL3",

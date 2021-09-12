@@ -8,6 +8,7 @@ declare global {
   namespace NodeJS {
     interface Global {
       logger: Logger;
+      pro: boolean;
     }
   }
 }
@@ -18,9 +19,10 @@ async function bootstrap() {
     const logger = app.get(Logger);
     app.useLogger(logger);
     global.logger = logger;
+    global.pro = false;
 
     const appService = app.get(AppService);
-    appService.start();
+    appService.start(true);
   } catch (e) {
     printError('bootstrapException', e);
   }
