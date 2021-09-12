@@ -49,6 +49,30 @@
   - email: zlq4863947@gmail.com
   - qq: 442540141
 
+## 快速开始
+
+### 1，环境安装
+
+- 安装nodejs（最新版就可以）
+- 执行 `npm install` （安装程序依赖）
+
+### 2、设置配置文件
+
+ - **config/default.sample.toml**更改为**config/default.toml**
+ - 自己修改成想要的配置，例如:币安的apikey
+
+### 3、启动命令行机器人
+
+#### 免费版命令行应用
+
+- `npm run start:cli`
+
+ <p align="center">
+    <img src="assets/images/run-cli-app.gif" alt="npm run start:cli" />
+</p>
+
+- `npm run start:pro-cli`（需求提前安装docker）
+
 ## 捐赠
 
 程序开发不易，需要大量的时间和精力。如果有人为开发捐款，我将非常感谢。
