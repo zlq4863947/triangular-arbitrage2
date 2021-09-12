@@ -49,6 +49,29 @@
   - email: zlq4863947@gmail.com
   - qq: 442540141
 
+## Quick start
+
+### 1，Environmental installation
+
+- Install nodejs (the latest version is fine)
+- Execute `npm install` (depends on the installer)
+
+### 2、Setup configuration file
+
+- **config/default.sample.toml**change to**config/default.toml**
+- Modify it yourself to the desired configuration，ig:Binance's apikey
+
+### 3、Start the command line bot
+
+#### Free version of the command line application
+
+- `npm run start:cli`
+
+#### Paid version of the command line application
+
+- `npm run start:pro-cli`（Need to install docker in advance）
+
+
 ## Donate
 
 Program development is not easy and requires a lot of time and energy. If anyone contributes to the development, I would be very grateful.
