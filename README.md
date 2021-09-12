@@ -67,9 +67,7 @@
 
 - `npm run start:cli`
 
- <p align="center">
-    <img src="assets/images/run-cli-app.gif" alt="npm run start:cli" />
-</p>
+#### 付费版命令行应用
 
 - `npm run start:pro-cli`（需求提前安装docker）
 
