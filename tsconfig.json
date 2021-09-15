@@ -13,7 +13,7 @@
     "incremental": false,
     "paths": {
       "@ta2-libs/*": [
-        "libs/ta2-libs/src/*"
+        "libs/*"
       ]
     }
   },

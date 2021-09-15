@@ -28,12 +28,9 @@
     },
     "ta2-libs": {
       "type": "library",
-      "root": "libs/ta2-libs",
+      "root": "libs",
       "entryFile": "index",
-      "sourceRoot": "libs/ta2-libs/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/ta2-libs/tsconfig.lib.json"
-      }
+      "sourceRoot": "libs"
     }
   }
 }
