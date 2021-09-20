@@ -1,4 +1,4 @@
-import moment = require('moment');
+import { getTimestring } from '@ta2-libs/common';
 
 import { LogLevels } from '../types';
 import { makeColoredLogArgs } from './make-colored-log-args';
@@ -18,7 +18,7 @@ export function getLogContent(enableColors: boolean, logLevel: LogLevels, tags: 
   }
   let logArgs: any[];
   const tagStr = `[${tags.join('][')}]`;
-  const dateLabel = `   - ${moment().format('YYYY-MM-DDTHH:mm:ss.SSSZZ')}   `;
+  const dateLabel = `   - ${getTimestring()}   `;
   if (enableColors) {
     logArgs = makeColoredLogArgs(logLevel, levelSpace, tagStr, dateLabel, ...data);
   } else {

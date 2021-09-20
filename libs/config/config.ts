@@ -1,4 +1,3 @@
-import { ConnectionOptions } from 'typeorm';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 
 export interface ConfigSettings {
@@ -11,6 +10,7 @@ export interface ConfigSettings {
   };
   pro: ConfigPro;
   mysql: ConfigMysql;
+  notification: ConfigNotification;
   connectionOptions: MysqlConnectionOptions;
 }
 
@@ -40,6 +40,18 @@ export interface ConfigMysql {
   password: string;
   database: string;
   logging: boolean;
+}
+
+export interface ConfigNotification {
+  email: ConfigEmail;
+}
+
+export interface ConfigEmail {
+  enabled: boolean;
+  smtpService: string;
+  authUser: string;
+  authPass: string;
+  sendList: string[];
 }
 
 // tslint:disable-next-line:no-var-requires
