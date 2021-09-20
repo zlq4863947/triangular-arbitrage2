@@ -26,7 +26,7 @@ export class TradeEdgeEntity {
   @Column({
     type: 'varchar',
     name: 'pair',
-    length: 10,
+    length: 20,
     comment: 'pair',
   })
   readonly pair!: string;

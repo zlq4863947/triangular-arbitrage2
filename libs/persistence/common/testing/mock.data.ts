@@ -23,3 +23,16 @@ export const mockTradeEdgeEntityParam: TradeEdgeEntityParam = {
   quantity: 0.002081,
   fee: 0.001,
 };
+
+export const mockTradeEdgeEntityParam2: TradeEdgeEntityParam = {
+  id: 'BUSD-ETH_1626796988971',
+  triangleId: 'BUSD-ETH-UFT_1626796988971',
+  status: TradeStatus.Todo,
+  pair: 'ALPACA/BUSD',
+  fromAsset: 'BUSD',
+  toAsset: 'BTC',
+  side: 'buy',
+  price: 43454.02,
+  quantity: 0.002081,
+  fee: 0.001,
+};

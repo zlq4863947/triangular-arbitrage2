@@ -1,3 +1,4 @@
+import { getTimestring } from '@ta2-libs/common';
 import { Config } from '@ta2-libs/config';
 import { SendMailOptions, createTransport } from 'nodemailer';
 
@@ -30,7 +31,7 @@ export class EmailHandle {
       from: `"triangular-arbitrage2"<${config.authUser}`,
       to: config.sendList,
       subject: inputs.subject,
-      html: emailTemplate(inputs.title, inputs.body),
+      html: emailTemplate(inputs.title, `时间: ${inputs.body}<br><br>${getTimestring()}`),
       attachments: [
         {
           filename: 'logo.png',

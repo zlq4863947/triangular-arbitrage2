@@ -10,5 +10,5 @@ module.exports = {
   migrationsRun: false,
   supportBigNumbers: true,
   bigNumberStrings: true,
-  entities: ['dist/libs/ta2-libs/src/persistence/entity/**/*.entity.js'],
+  entities: ['dist/libs/persistence/entity/**/*.entity.js'],
 };

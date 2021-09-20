@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@ta2-libs/logger';
+import { NotificationManager } from '@ta2-libs/notifications';
 
 import { AppModule, AppService } from './app';
 
@@ -8,6 +9,7 @@ declare global {
   namespace NodeJS {
     interface Global {
       logger: Logger;
+      notification: NotificationManager;
       pro: boolean;
     }
   }
@@ -19,6 +21,7 @@ async function bootstrap() {
     const logger = app.get(Logger);
     app.useLogger(logger);
     global.logger = logger;
+    global.notification = new NotificationManager();
     global.pro = false;
 
     const appService = app.get(AppService);

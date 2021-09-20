@@ -1,5 +1,5 @@
 import { TradeEdgeEntity } from '@ta2-libs/persistence';
-import { mockTradeEdgeEntityParam } from '@ta2-libs/persistence/common/testing';
+import { mockTradeEdgeEntityParam, mockTradeEdgeEntityParam2 } from '@ta2-libs/persistence/common/testing';
 
 import { EntityTestBed } from '../../common/testing/entity-test-bed';
 import { TradeEdgeEntityParam, TradeEdgeRepository } from './trade-edge.repository';
@@ -7,6 +7,7 @@ import { TradeEdgeEntityParam, TradeEdgeRepository } from './trade-edge.reposito
 describe('trade-edge.repository', () => {
   let repository: TradeEdgeRepository;
   const defaultData = mockTradeEdgeEntityParam;
+  const defaultData2 = mockTradeEdgeEntityParam2;
 
   beforeAll(async () => {
     await EntityTestBed.setup();
@@ -26,6 +27,18 @@ describe('trade-edge.repository', () => {
     it('should insert new trade edge', async () => {
       const newData = {
         ...defaultData,
+        id: 'insert-data',
+      };
+      await repository.insertTradeEdge(newData);
+      const insertedData = await repository.find({
+        id: newData.id,
+      });
+      expect(insertedData.map(getDataFromEntity)).toEqual([newData]);
+    });
+
+    it('should insert new trade edge 2', async () => {
+      const newData = {
+        ...defaultData2,
         id: 'insert-data',
       };
       await repository.insertTradeEdge(newData);
