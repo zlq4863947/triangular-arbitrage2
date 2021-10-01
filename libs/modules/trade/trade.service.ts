@@ -115,26 +115,27 @@ export class TradeService extends OnDestroyService implements OnModuleInit {
     }
 
     const tradeEdgeA = initTradeEdge(a, minAmountA, feeA);
-    let actualAmountA = getActualAmount(tradeEdgeA, feeA);
+    let actualTotalA = getActualTotal(tradeEdgeA, feeA);
     const precisionAmountB = pairInfoB.precision.amount;
 
     const feeB = this.dataService.pairFees[b.pair].taker;
 
     const feeC = this.dataService.pairFees[c.pair].taker;
-    let amountB = floor(divide(actualAmountA, b.price), precisionAmountB).toNumber();
+    let amountB = floor(divide(actualTotalA, b.price), precisionAmountB).toNumber();
     if (feeB > 0) {
       this.logger.info(this.name, `B边手续费(${feeB}),重新计算A边订单数量。`);
       amountB = ceil(add(amountB, multiple(amountB, feeB), multiple(amountB, 0.1)), precisionAmountB).toNumber();
       const expectFilledAmount = multiple(amountB, b.price);
       tradeEdgeA.quantity = ceil(
-        b.side === 'sell' ? divide(expectFilledAmount, a.price) : expectFilledAmount,
+        // b边的to如果是基础货币
+        getAssetTypeFromPair(b.pair, b.toAsset) === 'base' ? divide(expectFilledAmount, a.price) : expectFilledAmount,
         pairInfoA.precision.amount,
       ).toNumber();
-      actualAmountA = getActualAmount(tradeEdgeA, feeA);
-      amountB = floor(divide(actualAmountA, b.price), precisionAmountB).toNumber();
+      actualTotalA = getActualTotal(tradeEdgeA, feeA);
+      amountB = floor(divide(actualTotalA, b.price), precisionAmountB).toNumber();
     }
     const tradeEdgeB = initTradeEdge(b, amountB, feeB);
-    const actualAmountB = floor(getActualAmount(tradeEdgeB, feeB), precisionAmountB).toNumber();
+    const actualAmountB = floor(getActualTotal(tradeEdgeB, feeB), precisionAmountB).toNumber();
 
     const tradeEdgeC = initTradeEdge(c, actualAmountB, feeC);
 
@@ -174,16 +175,26 @@ function initTradeEdge(edge: Edge, quantity: number, fee: number): TradeEdge {
 }
 
 /**
- * 获得下单成交后的实际数量
+ * 获得下单成交后的实际数量(成交额)
  *
  * 剩余数量 = 订单数量 - (订单数量 x 手续费)
- * 实际数量 = '购买' ? 剩余数量 : 剩余数量 x 订单价格
+ * 实际成交额 = '购买' ? 剩余数量 : 剩余数量 x 订单价格
  * @param edge
  * @param fee
  */
-function getActualAmount(edge: TradeEdge, fee: number): number {
+function getActualTotal(edge: TradeEdge, fee: number): number {
   // 剩余数量 = 订单数量 - (订单数量 x 手续费)
   const remainingAmount = subtract(edge.quantity, multiple(edge.quantity, fee)).toNumber();
 
   return edge.side === 'buy' ? remainingAmount : multiple(remainingAmount, edge.price).toNumber();
+}
+
+/**
+ * 通过pair获取指定货币是基础货币还是报价货币
+ * @param pair
+ * @param asset
+ */
+function getAssetTypeFromPair(pair: string, asset: string): 'quote' | 'base' {
+  const [baseAsset, quoteAsset] = pair.split('/') as [string, string];
+  return asset === baseAsset ? 'base' : 'quote';
 }

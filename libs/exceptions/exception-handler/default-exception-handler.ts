@@ -7,7 +7,7 @@ export class DefaultExceptionHandler extends ExceptionHandler {
     logger.error(`${className},${methodName}`, JSON.stringify(args), exception.stack);
     if (_global.notification) {
       const title = `${className}-${methodName}`;
-      _global.notification.sendMail({
+      _global.notification.sendEmail({
         subject: `[异常警报] ${title}`,
         title,
         body: exception.stack,
