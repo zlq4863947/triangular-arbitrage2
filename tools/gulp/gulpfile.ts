@@ -28,6 +28,8 @@ function bundleApp(name: string, dirName: string) {
     fs.mkdirSync(bundleDir);
   }
   fs.copyFileSync(`${rootDir}/${name}-bundle.js`, `${bundleDir}/bundle.js`);
+  fs.copyFileSync(`./docker-compose.yml`, `${bundleDir}/docker-compose.yml`);
+  fs.copyFileSync(`./pm2.config.js`, `${bundleDir}/pm2.config.js`);
   fs.writeFileSync(`${bundleDir}/package.json`, getDeployPackageJson(dirName));
 
   const configDir = `${bundleDir}/config`;

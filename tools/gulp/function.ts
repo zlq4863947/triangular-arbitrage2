@@ -11,7 +11,13 @@ export function getDeployPackageJson(pkgName?: string): string {
     description: pkg.description,
     author: pkg.author,
     scripts: {
-      start: 'node bundle.js',
+      start: 'pm2 start pm2.config.js',
+      stop: 'pm2 stop pm2.config.js',
+      restart: 'pm2 restart pm2.config.js',
+      reload: 'pm2 restart pm2.config.js',
+      delete: 'pm2 restart pm2.config.js',
+      'docker:up': 'docker-compose -f ./docker-compose.yml up -d',
+      'docker:down': 'docker-compose -f ./docker-compose.yml down',
     },
     dependencies,
   };

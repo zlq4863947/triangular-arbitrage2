@@ -3,9 +3,9 @@ import { BinanceApiService } from '@ta2-libs/broker-api';
 import { DataService } from '@ta2-libs/modules';
 import { buildDeferInitService } from '@ta2-libs/testing';
 
-import { AppModule } from '../../../../../apps/cli-app/src/app';
 import { Triangle } from '../../models';
 import { TradeService } from './trade.service';
+import { AppModule } from '../../../apps/cli-app/src/app';
 
 describe('TradeService', () => {
   let service: TradeService;
@@ -655,6 +655,74 @@ describe('TradeService', () => {
         cRate: 'c rate = (0.18223695 x 5.494 -1) x 100 = 0.12098174%',
       },
       time: 1625283670606,
+      openTime: 0,
+      status: 'todo',
+    });
+    done();
+  });
+
+  it('getTradeTriangle #11', async (done) => {
+    const triangle: Triangle = {
+      id: 'BNB-BTC-INJ',
+      edges: [
+        { pair: 'BNB/BTC', fromAsset: 'BNB', toAsset: 'BTC', side: 'sell', price: 0.008831, quantity: 1.276 },
+        { pair: 'INJ/BTC', fromAsset: 'BTC', toAsset: 'INJ', side: 'buy', price: 0.0002316, quantity: 0.8 },
+        { pair: 'INJ/BNB', fromAsset: 'INJ', toAsset: 'BNB', side: 'sell', price: 0.02623, quantity: 124.5 },
+      ],
+      rate: '11225.5613126',
+      logs: {
+        aRate: '',
+        bRate: 'b rate = 1 / 0.0002316 = 4317.78929188 INJ',
+        cRate: 'c rate = (4317.78929188 x 0.02623 -1) x 100 = 11225.5613126%',
+      },
+      time: 1632930303482,
+    };
+
+    const tradeTriangle = await service.getTradeTriangle(triangle);
+    expect(tradeTriangle).toEqual({
+      id: 'BNB-BTC-INJ',
+      edges: [
+        {
+          pair: 'BNB/BTC',
+          fromAsset: 'BNB',
+          toAsset: 'BTC',
+          side: 'sell',
+          price: 0.008831,
+          quantity: 0.037,
+          fee: 0.001,
+          id: 'BNBBTC_1632939151472',
+          status: 'todo',
+        },
+        {
+          pair: 'INJ/BTC',
+          fromAsset: 'BTC',
+          toAsset: 'INJ',
+          side: 'buy',
+          price: 0.0002316,
+          quantity: 1.4,
+          fee: 0.001,
+          id: 'INJBTC_1632939185494',
+          status: 'todo',
+        },
+        {
+          pair: 'INJ/BNB',
+          fromAsset: 'INJ',
+          toAsset: 'BNB',
+          side: 'sell',
+          price: 0.02623,
+          quantity: 1.3,
+          fee: 0.001,
+          id: 'INJBNB_1632939186767',
+          status: 'todo',
+        },
+      ],
+      rate: '11225.5613126',
+      logs: {
+        aRate: '',
+        bRate: 'b rate = 1 / 0.0002316 = 4317.78929188 INJ',
+        cRate: 'c rate = (4317.78929188 x 0.02623 -1) x 100 = 11225.5613126%',
+      },
+      time: 1632930303482,
       openTime: 0,
       status: 'todo',
     });
